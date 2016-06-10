@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc 4.8.1 mingw32 -mcpu=cortex-m3 -mthumb -g2 -Wall -O0 -c -DSTM32F103C8T6 -DSTM32F103xB -DUSE_STDPERIPH_DRIVER -I..\..\..\..\..\..\..\Desktop\Louise -I..\..\..\..\..\..\..\Desktop\Louise\BlinkLED_CoIDEF1\Conf -I..\..\..\..\..\..\..\Desktop\Louise\BlinkLED_CoIDEF1\startup -I..\..\..\..\..\..\..\CoIDE\workspace\STM32Cube_FW_F1_V1.4.0\Drivers\CMSIS\Include -I..\..\..\..\..\..\..\Desktop\Louise\BlinkLED_CoIDEF1\Hardware -I..\..\..\..\..\..\..\Desktop\Louise\BlinkLED_CoIDEF1 -I..\..\..\..\..\..\..\CoIDE\workspace\STM32Cube_FW_F1_V1.4.0\Drivers\CMSIS -I..\..\..\..\..\..\..\Desktop\Louise\BlinkLED_CoIDEF1\CMSIS -I..\..\..\..\..\..\..\CoIDE\workspace\STM32Cube_FW_F1_V1.4.0\Drivers">
+      <target file="stm32f10x_rcc.o" lastModified="15534ad5318">
+         <source file="..\..\..\Hardware\stm32f10x_rcc.c" lastModified="1552ec4947f"/>
+      </target>
+      <target file="startup_stm32f103xb.o" lastModified="15534ad526c">
+         <source file="..\..\..\startup\startup_stm32f103xb.s" lastModified="1552ec49579"/>
+      </target>
+      <target file="main.o" lastModified="15534ad524d">
+         <source file="..\..\..\app\main.c" lastModified="1552ec4947f"/>
+      </target>
+      <target file="system_stm32f1xx.o" lastModified="15534ad5115">
+         <source file="..\..\..\startup\system_stm32f1xx.c" lastModified="1552ec49588"/>
+      </target>
+      <target file="stm32f10x_gpio.o" lastModified="15534ad51d0">
+         <source file="..\..\..\Hardware\stm32f10x_gpio.c" lastModified="1552ec49460"/>
+      </target>
+   </processor>
+</history>
