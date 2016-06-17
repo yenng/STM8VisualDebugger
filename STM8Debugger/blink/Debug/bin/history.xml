@@ -1,12 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
-   <processor signature="4.9.3 -mcpu=cortex-m3 -mthumb -g2 -Map=blink.map -O0 --gc-sections -LC:/Users/D203C-01/Desktop/Louise/BlinkLED_CoIDEF1 -TC:/Users/D203C-01/Desktop/Louise/BlinkLED_CoIDEF1/stm32f103c8_flash.ld -g">
-      <target file="blink.elf" lastModified="15534ad55d6">
-         <source file="..\obj\stm32f10x_rcc.o" lastModified="15534ad5318"/>
-         <source file="..\obj\stm32f10x_gpio.o" lastModified="15534ad51d0"/>
-         <source file="..\obj\startup_stm32f103xb.o" lastModified="15534ad526c"/>
-         <source file="..\obj\system_stm32f1xx.o" lastModified="15534ad5115"/>
-         <source file="..\obj\main.o" lastModified="15534ad524d"/>
+   <processor signature="4.9.3 -mcpu=cortex-m3 -mthumb -g2 -Map=blink.map -O0 --gc-sections -LC:/Users/D203C-01/Desktop/Github/STM8VisualDebugger/STM8Debugger -TC:/Users/D203C-01/Desktop/Github/STM8VisualDebugger/STM8Debugger/stm32f103c8_flash.ld -g">
+      <target file="blink.elf" lastModified="15558c364f8">
+         <source file="..\obj\stm32f10x_tim.o" lastModified="15558c1592f"/>
+         <source file="..\obj\stm32f10x_gpio.o" lastModified="155581d521f"/>
+         <source file="..\obj\startup_stm32f103xb.o" lastModified="155581d52dd"/>
+         <source file="..\obj\main.o" lastModified="15558c1abec"/>
+         <source file="..\obj\stm32f10x_rcc.o" lastModified="155581d5391"/>
+         <source file="..\obj\swim.o" lastModified="15558c361bb"/>
+         <source file="..\obj\Timer.o" lastModified="15558c1de54"/>
+         <source file="..\obj\system_stm32f1xx.o" lastModified="155581d5157"/>
       </target>
    </processor>
 </history>
