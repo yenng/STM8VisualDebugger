@@ -19,6 +19,9 @@ void enableTimer(TIM_TypeDef* TIM,FunctionalState NewState);
 
 
 uint16_t getTime(TIM_TypeDef* TIMx);
+void TM_PWM_Init(void);
+void TM_TIMER_Init(void);
+void TM_LEDS_Init(void);
 
 #endif //__Timer_setting_H__
 
