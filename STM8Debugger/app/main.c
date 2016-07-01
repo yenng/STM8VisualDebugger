@@ -16,11 +16,6 @@
   * @{
   */
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-
 TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 TIM_OCInitTypeDef  TIM_OCInitStructure;
 TIM_OCInitTypeDef outputChannelInit;
@@ -46,8 +41,8 @@ int main(void)
 {
 
 
-//  NVIC_EnableIRQ(TIM1_UP_IRQn);
-//	TIM_ITConfig(TIM1, TIM_IT_Update, ENABLE);
+  NVIC_EnableIRQ(TIM1_UP_IRQn);
+
 
   /* System Clocks Configuration */
   RCC_Configuration();
@@ -55,25 +50,22 @@ int main(void)
   /* GPIO Configuration */
   GPIO_Configuration();
 
-
+  TIM_ITConfig(TIM1, TIM_IT_Update, ENABLE); //Have to put after GPIO
 
 /*   The Timer pulse is calculated as follows:
      - ChannelxPulse = DutyCycle * (TIM1_Period - 1) / 100
-  ----------------------------------------------------------------------- */
-  /* Compute the value to be set in ARR regiter to generate signal frequency at 1 Khz
+  	 -----------------------------------------------------------------------
+   * Compute the value to be set in ARR regiter to generate signal frequency at 1 Khz
+   * For Interrupt to generate toggle pulse, Frequency need to divide by 2
    * 72M / (frequency * 2)
+   * For 50% PWM, frequency do not divide by 2.
+   * 72M / frequency
    * /
 */
   TimerPeriod = (SystemCoreClock / (1000 *2) ) - 1;
 
   /* Compute CCR1 value to generate a duty cycle at 50% for channel 1 and 1N */
   Channel1Pulse = (uint16_t) (((uint32_t) 5 * (TimerPeriod - 1)) / 10);
-//  /* Compute CCR2 value to generate a duty cycle at 37.5%  for channel 2 and 2N */
-//  Channel2Pulse = (uint16_t) (((uint32_t) 375 * (TimerPeriod - 1)) / 1000);
-//  /* Compute CCR3 value to generate a duty cycle at 25%  for channel 3 and 3N */
-//  Channel3Pulse = (uint16_t) (((uint32_t) 25 * (TimerPeriod - 1)) / 100);
-//  /* Compute CCR4 value to generate a duty cycle at 12.5%  for channel 4 */
-//  Channel4Pulse = (uint16_t) (((uint32_t) 125 * (TimerPeriod- 1)) / 1000);
 
   /* Time Base configuration */
   TIM_TimeBaseStructure.TIM_Prescaler = 0;
@@ -88,6 +80,7 @@ int main(void)
 //  TIM_UpdateDisableConfig(TIM1, DISABLE);
 
 
+/*
   outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
   outputChannelInit.TIM_Pulse = Channel1Pulse;
   outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
@@ -96,16 +89,14 @@ int main(void)
 
   TIM_OC1Init(TIM1, &outputChannelInit);
   TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
+*/
 
 
   /* TIM1 counter enable */
   TIM_Cmd(TIM1, ENABLE);
 
   /* TIM1 Main Output Enable */
-  TIM_CtrlPWMOutputs(TIM1, ENABLE);
-
-  uint32_t checkbit = 0;
-
+//  TIM_CtrlPWMOutputs(TIM1, ENABLE);
 
   while (1)
   {
