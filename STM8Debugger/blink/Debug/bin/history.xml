@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
    <processor signature="4.9.3 -mcpu=cortex-m3 -mthumb -g2 -Map=blink.map -O0 --gc-sections -LC:/Users/D203C-01/Desktop/STM8VisualDebugger/STM8Debugger -TC:/Users/D203C-01/Desktop/STM8VisualDebugger/STM8Debugger/stm32f103c8_flash.ld -g">
-      <target file="blink.elf" lastModified="155a15a0577">
+      <target file="blink.elf" lastModified="155a45b81fc">
          <source file="..\obj\stm32f10x_tim.o" lastModified="155a082ecd2"/>
          <source file="..\obj\stm32f10x_gpio.o" lastModified="155a082edcc"/>
          <source file="..\obj\startup_stm32f103xb.o" lastModified="155800ebeb1"/>
-         <source file="..\obj\main.o" lastModified="155a15a0335"/>
+         <source file="..\obj\main.o" lastModified="155a45b7fac"/>
          <source file="..\obj\stm32f10x_rcc.o" lastModified="155a082ef04"/>
          <source file="..\obj\system_stm32f10x.o" lastModified="155a082ed40"/>
          <source file="..\obj\swim.o" lastModified="155a0f31fc0"/>

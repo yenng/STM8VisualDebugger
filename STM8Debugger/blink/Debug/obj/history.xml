@@ -13,8 +13,8 @@
       <target file="system_stm32f10x.o" lastModified="155a082ed40">
          <source file="..\..\..\app\Config\system_stm32f10x.c" lastModified="155a081e5a3"/>
       </target>
-      <target file="main.o" lastModified="155a15a0335">
-         <source file="..\..\..\app\main.c" lastModified="155a159fb57"/>
+      <target file="main.o" lastModified="155a45b7fac">
+         <source file="..\..\..\app\main.c" lastModified="155a45b7974"/>
       </target>
       <target file="stm32f10x_gpio.o" lastModified="155a082edcc">
          <source file="..\..\..\app\Hardware\stm32f10x_gpio.c" lastModified="15580040ff3"/>
