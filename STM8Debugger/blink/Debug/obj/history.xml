@@ -13,8 +13,8 @@
       <target file="system_stm32f10x.o" lastModified="155a082ed40">
          <source file="..\..\..\app\Config\system_stm32f10x.c" lastModified="155a081e5a3"/>
       </target>
-      <target file="main.o" lastModified="155a4677e37">
-         <source file="..\..\..\app\main.c" lastModified="155a467788c"/>
+      <target file="main.o" lastModified="155aba7e26e">
+         <source file="..\..\..\app\main.c" lastModified="155aba7dbf3"/>
       </target>
       <target file="stm32f10x_gpio.o" lastModified="155a082edcc">
          <source file="..\..\..\app\Hardware\stm32f10x_gpio.c" lastModified="15580040ff3"/>
@@ -22,17 +22,17 @@
       <target file="system_stm32f1xx.o" lastModified="155800ebd88">
          <source file="..\..\..\startup\system_stm32f1xx.c" lastModified="155800413aa"/>
       </target>
-      <target file="stm32f10x_rcc.o" lastModified="155a082ef04">
-         <source file="..\..\..\app\Hardware\stm32f10x_rcc.c" lastModified="15580041002"/>
-      </target>
       <target file="stm32f10x_it.o" lastModified="155a1050d00">
          <source file="..\..\..\app\Hardware\stm32f10x_it.c" lastModified="155a10505fd"/>
       </target>
+      <target file="stm32f10x_rcc.o" lastModified="155a082ef04">
+         <source file="..\..\..\app\Hardware\stm32f10x_rcc.c" lastModified="15580041002"/>
+      </target>
+      <target file="Timer.o" lastModified="155ab9b712e">
+         <source file="..\..\..\app\Timer.c" lastModified="155ab9afccf"/>
+      </target>
       <target file="misc.o" lastModified="155a0fa26c4">
          <source file="..\..\..\app\Hardware\misc.c" lastModified="12e9da93720"/>
-      </target>
-      <target file="Timer.o" lastModified="155800ebfba">
-         <source file="..\..\..\app\Timer.c" lastModified="15580041002"/>
       </target>
    </processor>
 </history>
