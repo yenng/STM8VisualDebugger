@@ -10,24 +10,11 @@
          <include file="..\..\..\app\Hardware\stm32f10x.h"/>
          <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
       </source>
-      <source file="..\..\..\app\CMSIS\core_cmFunc.h" lastModified="1558004235c">
-         <include file="..\..\..\app\CMSIS\cmsis_gcc.h"/>
-      </source>
-      <source file="..\..\..\app\CMSIS\core_cm3.h" lastModified="155800413bc">
-         <include file="..\..\..\app\CMSIS\core_cmInstr.h"/>
-         <include file="..\..\..\app\CMSIS\core_cmFunc.h"/>
-      </source>
       <source file="..\..\..\app\Hardware\stm32f10x_gpio.h" lastModified="15580041002">
          <include file="..\..\..\app\Hardware\stm32f10x.h"/>
       </source>
       <source file="..\..\..\app\Hardware\stm32f10x_it.c" lastModified="155a10505fd">
          <include file="..\..\..\app\Hardware\stm32f10x_it.h"/>
-      </source>
-      <source file="..\..\..\app\Timer.h" lastModified="155ab9b31c5">
-         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
-      </source>
-      <source file="..\..\..\app\CMSIS\core_cmInstr.h" lastModified="1558004236b">
-         <include file="..\..\..\app\CMSIS\cmsis_gcc.h"/>
       </source>
       <source file="..\..\..\app\CMSIS\cmsis_gcc.h" lastModified="15580040fd4">
       </source>
@@ -35,14 +22,11 @@
          <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
          <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
       </source>
-      <source file="..\..\..\app\Timer.c" lastModified="155ab9b00b7">
-         <include file="..\..\..\app\Timer.h"/>
-         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
-         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
-         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
-      </source>
       <source file="..\..\..\app\Hardware\stm32f10x_tim.h" lastModified="15580041002">
          <include file="..\..\..\app\Hardware\stm32f10x.h"/>
+      </source>
+      <source file="..\..\..\app\Interrupt.h" lastModified="155d8a3a497">
+         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
       </source>
       <source file="..\..\..\app\Config\system_stm32f10x.h" lastModified="155a081e5a3">
       </source>
@@ -66,18 +50,69 @@
       <source file="..\..\..\app\Hardware\stm32f10x_rcc.c" lastModified="15580041002">
          <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
       </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_conf.h" lastModified="15580040ff3">
+         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
+      </source>
+      <source file="..\..\..\app\Hardware\misc.h" lastModified="12e9da93720">
+         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
+      </source>
+   </includePath>
+   <includePath signature="/I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app\Hardware /I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app\CMSIS /I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger /I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app /I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\startup /I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app\Config /I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger">
+      <source file="..\..\..\app\CMSIS\core_cmFunc.h" lastModified="1558004235c">
+         <include file="..\..\..\app\CMSIS\cmsis_gcc.h"/>
+      </source>
+      <source file="..\..\..\app\CMSIS\core_cm3.h" lastModified="155800413bc">
+         <include file="..\..\..\app\CMSIS\core_cmInstr.h"/>
+         <include file="..\..\..\app\CMSIS\core_cmFunc.h"/>
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_gpio.h" lastModified="15580041002">
+         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
+      </source>
+      <source file="..\..\..\app\Timer.h" lastModified="155d9084c9d">
+         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
+      </source>
+      <source file="..\..\..\app\CMSIS\core_cmInstr.h" lastModified="1558004236b">
+         <include file="..\..\..\app\CMSIS\cmsis_gcc.h"/>
+      </source>
+      <source file="..\..\..\app\CMSIS\cmsis_gcc.h" lastModified="15580040fd4">
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_gpio.c" lastModified="15580040ff3">
+         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
+      </source>
+      <source file="..\..\..\app\Timer.c" lastModified="155d90c0c21">
+         <include file="..\..\..\app\Timer.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_tim.h" lastModified="15580041002">
+         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
+      </source>
+      <source file="..\..\..\app\Interrupt.h" lastModified="155d8a3a497">
+         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
+      </source>
+      <source file="..\..\..\app\Config\system_stm32f10x.h" lastModified="155a081e5a3">
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_tim.c" lastModified="15580041002">
+         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
+      </source>
+      <source file="..\..\..\app\Config\system_stm32f10x.c" lastModified="155a081e5a3">
+         <include file="..\..\..\app\Config\stm32f10x.h"/>
+      </source>
+      <source file="..\..\..\startup\startup_stm32f103xb.s" lastModified="1558004139b">
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_rcc.h" lastModified="15580041002">
+         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_rcc.c" lastModified="15580041002">
+         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
+      </source>
       <source file="..\..\..\app\Config\stm32f10x.h" lastModified="155800413cb">
          <include file="..\..\..\app\CMSIS\core_cm3.h"/>
          <include file="..\..\..\app\Config\system_stm32f10x.h"/>
          <include file="..\..\..\app\Hardware\stm32f10x_conf.h"/>
-      </source>
-      <source file="..\..\..\app\main.c" lastModified="155aba7dfdb">
-         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
-         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
-         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
-         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
-         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
-         <include file="..\..\..\app\Timer.h"/>
       </source>
       <source file="..\..\..\app\Hardware\stm32f10x_conf.h" lastModified="15580040ff3">
          <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
@@ -86,9 +121,6 @@
          <include file="..\..\..\app\CMSIS\core_cm3.h"/>
          <include file="..\..\..\app\Config\system_stm32f10x.h"/>
          <include file="..\..\..\app\Hardware\stm32f10x_conf.h"/>
-      </source>
-      <source file="..\..\..\app\Hardware\misc.h" lastModified="12e9da93720">
-         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
       </source>
    </includePath>
 </dependencies>
