@@ -73,13 +73,13 @@
   <Components path="./"/>
   <LocalComponents/>
   <Files>
-    <File name="CMSIS/cmsis_gcc.h" path="app/CMSIS/cmsis_gcc.h" type="1"/>
     <File name="app/main.c" path="app/main.c" type="1"/>
+    <File name="CMSIS/cmsis_gcc.h" path="app/CMSIS/cmsis_gcc.h" type="1"/>
     <File name="Hardware/stm32f10x_tim.h" path="app/Hardware/stm32f10x_tim.h" type="1"/>
     <File name="Hardware/stm32f10x_tim.c" path="app/Hardware/stm32f10x_tim.c" type="1"/>
     <File name="Hardware/stm32f10x_rcc.c" path="app/Hardware/stm32f10x_rcc.c" type="1"/>
-    <File name="CMSIS/core_cmFunc.h" path="app/CMSIS/core_cmFunc.h" type="1"/>
     <File name="Hardware" path="" type="2"/>
+    <File name="CMSIS/core_cmFunc.h" path="app/CMSIS/core_cmFunc.h" type="1"/>
     <File name="Config/system_stm32f10x.h" path="app/Config/system_stm32f10x.h" type="1"/>
     <File name="CMSIS/core_cm3.h" path="app/CMSIS/core_cm3.h" type="1"/>
     <File name="Startup/stm32f1xx.h" path="startup/stm32f1xx.h" type="1"/>
@@ -95,8 +95,8 @@
     <File name="Hardware/stm32f10x_conf.h" path="app/Hardware/stm32f10x_conf.h" type="1"/>
     <File name="Hardware/stm32f10x.h" path="app/Hardware/stm32f10x.h" type="1"/>
     <File name="Startup/startup_stm32f103xb.s" path="startup/startup_stm32f103xb.s" type="1"/>
-    <File name="CMSIS" path="" type="2"/>
     <File name="app/Timer.h" path="app/Timer.h" type="1"/>
+    <File name="CMSIS" path="" type="2"/>
     <File name="Config" path="" type="2"/>
     <File name="Hardware/stm32f10x_rcc.h" path="app/Hardware/stm32f10x_rcc.h" type="1"/>
   </Files>

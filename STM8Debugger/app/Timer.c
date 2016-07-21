@@ -25,14 +25,13 @@ void TM_TIMER_Init(TIM_TypeDef* TIMx,
                   uint16_t ClockDivision,
                   uint16_t ARRPreloadConfig)
 {
-
-	  TIM_TimeBaseStructure.TIM_Prescaler = Prescaler;
-	  TIM_TimeBaseStructure.TIM_CounterMode = CounterMode;
-	  TIM_TimeBaseStructure.TIM_Period = Period;
-	  TIM_TimeBaseStructure.TIM_ClockDivision = ClockDivision;
-	  TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
-	  TIM_TimeBaseInit(TIMx, &TIM_TimeBaseStructure);
-	  TIM_ARRPreloadConfig(TIMx, ARRPreloadConfig);
+  TIM_TimeBaseStructure.TIM_Prescaler = Prescaler;
+  TIM_TimeBaseStructure.TIM_CounterMode = CounterMode;
+  TIM_TimeBaseStructure.TIM_Period = Period;
+  TIM_TimeBaseStructure.TIM_ClockDivision = ClockDivision;
+  TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
+  TIM_TimeBaseInit(TIMx, &TIM_TimeBaseStructure);
+  TIM_ARRPreloadConfig(TIMx, ARRPreloadConfig);
 }
 
 
@@ -44,13 +43,13 @@ void TM_PWM_OC_Init(TIM_TypeDef* TIMx,
                     uint16_t OCIdleState,
                     uint16_t OCPreload_Enable)
 {
-    outputChannelInit.TIM_OCMode = OCMode;
-	  outputChannelInit.TIM_Pulse = Pulse;
-	  outputChannelInit.TIM_OutputState = OutputState;
-	  outputChannelInit.TIM_OCPolarity = OCPolarity;
-	  outputChannelInit.TIM_OCIdleState = OCIdleState;
-	  TIM_OC1Init(TIMx, &outputChannelInit);
-	  TIM_OC1PreloadConfig(TIM1, OCPreload_Enable);
+  outputChannelInit.TIM_OCMode = OCMode;
+  outputChannelInit.TIM_Pulse = Pulse;
+  outputChannelInit.TIM_OutputState = OutputState;
+  outputChannelInit.TIM_OCPolarity = OCPolarity;
+  outputChannelInit.TIM_OCIdleState = OCIdleState;
+  TIM_OC1Init(TIMx, &outputChannelInit);
+  TIM_OC1PreloadConfig(TIM1, OCPreload_Enable);
 }
 
 void TM_PWM_IC_Init(TIM_TypeDef* TIMx,
