@@ -2,10 +2,12 @@
 #define __Timer_H__
 
 #include "stm32f10x_tim.h"
+#include "configuration.h"
 TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 //TIM_OCInitTypeDef  TIM_OCInitStructure;
 TIM_OCInitTypeDef outputChannelInit;
 TIM_ICInitTypeDef TIM_ICInitStructure;
+
 
 void TM_TIMER_Init(TIM_TypeDef* TIMx,
                   uint16_t Prescaler,
@@ -37,5 +39,7 @@ void TM_PWM_IC_Init(TIM_TypeDef* TIMx,
                     uint16_t InputTriggerSource,
                     uint16_t SlaveMode,
                     uint16_t MasterSlaveMode);
+
+
 #endif //__Timer_H__
 

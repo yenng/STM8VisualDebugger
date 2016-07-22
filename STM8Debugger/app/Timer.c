@@ -49,7 +49,7 @@ void TM_PWM_OC_Init(TIM_TypeDef* TIMx,
   outputChannelInit.TIM_OCPolarity = OCPolarity;
   outputChannelInit.TIM_OCIdleState = OCIdleState;
   TIM_OC1Init(TIMx, &outputChannelInit);
-  TIM_OC1PreloadConfig(TIM1, OCPreload_Enable);
+  TIM_OC1PreloadConfig(TIMx, OCPreload_Enable);
 }
 
 void TM_PWM_IC_Init(TIM_TypeDef* TIMx,
@@ -64,38 +64,19 @@ void TM_PWM_IC_Init(TIM_TypeDef* TIMx,
 {
   TIM_ICInitStructure.TIM_Channel = Channel;
   TIM_ICInitStructure.TIM_ICPolarity = ICPolarity;
-  TIM_ICInitStructure.TIM_ICSelection =ICSelection;
-  TIM_ICInitStructure.TIM_ICPrescaler =ICPrescaler;
+  TIM_ICInitStructure.TIM_ICSelection = ICSelection;
+  TIM_ICInitStructure.TIM_ICPrescaler = ICPrescaler;
   TIM_ICInitStructure.TIM_ICFilter = ICFilter;
 
   TIM_PWMIConfig(TIMx, &TIM_ICInitStructure);
 
   /* Select the TIM3 Input Trigger: TI2FP2 */
-  TIM_SelectInputTrigger(TIMx, InputTriggerSource);
+//  TIM_SelectInputTrigger(TIMx, InputTriggerSource);
 
   /* Select the slave Mode: Reset Mode */
-  TIM_SelectSlaveMode(TIM3, SlaveMode);
+//  TIM_SelectSlaveMode(TIM3, SlaveMode);
 
   /* Enable the Master/Slave Mode */
-  TIM_SelectMasterSlaveMode(TIM3, MasterSlaveMode);
+//  TIM_SelectMasterSlaveMode(TIM3, MasterSlaveMode);
 }
-//  /* Time Base configuration */
-//  TIM_TimeBaseStructure.TIM_Prescaler = 0;
-//  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-//  TIM_TimeBaseStructure.TIM_Period = TimerPeriod;
-//  TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-//  TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
-//
-//  TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
-//
-////  TIM_UpdateRequestConfig(TIM1, TIM_UpdateSource_Regular);
-////  TIM_UpdateDisableConfig(TIM1, DISABLE);
-//  outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
-//  outputChannelInit.TIM_Pulse = Channel1Pulse;
-//  outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
-//  outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
-//  outputChannelInit.TIM_OCIdleState = TIM_OCIdleState_Set;
-//
-//  TIM_OC1Init(TIM1, &outputChannelInit);
-//  TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
 
