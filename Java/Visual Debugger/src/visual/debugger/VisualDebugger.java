@@ -7,6 +7,7 @@ package visual.debugger;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.swt.SWT;
@@ -25,9 +26,15 @@ import org.eclipse.swt.widgets.TableItem;
 public class VisualDebugger {
 
 public static void main (String [] args) throws Exception {
+    HashMap<String, AddressItem> addMap = new HashMap<>();
+    HashMap<Integer, Integer> lineNo = new HashMap<>();
     //call the ExtractAddress() function.
+    int line = 0;
+    int lineAssembly = 0;
+    int lineC = 0;
+    String add = null;
     
-    ExtractAddress.getAddress("acia.ls");
+    ExtractAddress.ExtractAddress("acia.map",addMap);
     
     //String to let hex string have 8 characters with 0 in front
     String ZEROES = "00000000";
@@ -47,8 +54,11 @@ public static void main (String [] args) throws Exception {
     String pattern = "(\\d+)(\\s+)([0-9a-fA-F]+)(\\s+)([0-9a-fA-F]+)(\\s+)(\\w+)(\\s)(\\S+)";
     //patterm will find the line that shows the location on the c file.
     String pattern1 = "(\\d+)(\\s+);(\\s+)(\\d+)(.+)";
+    //this pattern use to find the assembly address (find the word switch and get the address name.)
+    String addPattern = "(\\d+)(\\s+)switch(\\s+)(\\S+)";
     Pattern r = Pattern.compile(pattern);
     Pattern r1 = Pattern.compile(pattern1);//get the C code location to link to assembly code location
+    Pattern r2 = Pattern.compile(addPattern);//get assembly address.
 
     table.setLayoutData(data);
 
@@ -65,19 +75,43 @@ public static void main (String [] args) throws Exception {
        while ((thisLine = br.readLine()) != null) {
            Matcher m = r.matcher(thisLine);
            Matcher m1 = r1.matcher(thisLine);
+           Matcher m2 = r2.matcher(thisLine);
            //System.out.println(thisLine);
+           if(m2.find()){
+                AddressItem myStr = addMap.get("acia"+ m2.group(4));
+                //System.out.println(m2.group(1)+ "\t" + m2.group(4) + "\t" + myStr.length + "\t" + myStr.addr);
+                line = Integer.parseInt(m2.group(1));
+                add = myStr.addr;
+           }
            if(m1.find()){
                //print the location of .c file.
-               //System.out.println(m1.group(4));
+               lineAssembly = Integer.parseInt(m1.group(1));
+               lineC = Integer.parseInt(m1.group(4));
+               //System.out.println(lineAssembly+"\t"+lineC);
+               lineNo.put(lineC,lineAssembly);
+               //System.out.println(lineNo.get(lineC));
            }
            if(m.find()){
-                //System.out.println(m.group(0));
+                //System.out.println(m.group(3));
+                int Val = 0;
                 String[] part = m.group().split("(\\s+)");
                 TableItem item = new TableItem (table, SWT.NONE);
-                long Val = Long.parseLong(part[1], 16)+Long.parseLong("8080", 16);
+                GetAddress.GetAddress(thisLine);
+                int loc = Integer.parseInt(part[0]);
+                //example:
+                // in acia.text, starting address is 808a
+                //          2084                    switch  .text
+                //          2087    0000    88      push    a
+                //loc = 2087, line = 2084,
+                //     so the real address should be 0000 + 808a = 808a
+                if (loc>line)
+                    Val = Integer.parseInt(part[1], 16)+Integer.parseInt(add,16);
+                
+                //System.out.println(part[0]);
                 //System.out.print(Val + "  ");
                 //System.out.println(Long.toHexString(Val));
-                String address = Long.toHexString(Val);
+                String address = Integer.toHexString(Val);
+                //System.out.println(address);
                 part[1] = address.length() <= 10 ? ZEROES.substring(address.length()) + address : address;
                 for (int i = 1; i<5;i++)
                     item.setText (i-1, part[i]);

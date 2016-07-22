@@ -9,12 +9,11 @@ package visual.debugger;
  *
  * @author Yen
  */
-public class AddressItem {
-        public String addr;
-        public int length;
+public class FileSession {
+        public String section;
         
-        public AddressItem( String a, int b){
-            addr = a;
-            length = b;
+        public FileSession(String a){
+            section = a;
         }
+    
 }
