@@ -1,171 +1,230 @@
+/* Includes ------------------------------------------------------------------*/
+#include "stm32f10x.h"
 #include "stm32f10x_gpio.h"
 #include "stm32f10x.h"
 #include "stm32f10x_rcc.h"
 #include "stm32f10x_tim.h"
 #include "Timer.h"
+//#include "misc.h"
 #include <stdint.h>
+#include "Interrupt.h"
 
-void initializeLEDs()
-{
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
-    RCC_APB2PeriphResetCmd(RCC_APB2Periph_GPIOC, DISABLE);
+/** @addtogroup STM32F10x_StdPeriph_Examples
+  * @{
+  */
 
-    GPIO_InitTypeDef gpio;         //The GPIO_InitTypeDef structure can be referred by stm32f10x_gpio.h.
-    gpio.GPIO_Pin = GPIO_Pin_13;
-    gpio.GPIO_Speed = GPIO_Speed_50MHz;
-    gpio.GPIO_Mode = GPIO_Mode_Out_OD;
-    GPIO_Init(GPIOC, &gpio);
+/** @addtogroup TIM_7PWM_Output
+  * @{
+  */
 
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);
-    RCC_APB2PeriphResetCmd(RCC_APB2Periph_GPIOD, DISABLE);
 
-    gpio.GPIO_Pin = GPIO_Pin_12;
-    gpio.GPIO_Speed = GPIO_Speed_50MHz;
-    gpio.GPIO_Mode = GPIO_Mode_AF_PP;
-    GPIO_Init(GPIOD, &gpio);
+uint16_t counter = 0;
 
-//    GPIO_WriteBit(GPIOD, GPIO_Pin_12 | GPIO_Pin_13, Bit_RESET);
-}
-
-void delay(int counter)
-{
-    int i;
-    for (i = 0; i < counter * 1000; i++) {}
-}
-
-void initializeTimer()
-{
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4 ,ENABLE);
-	RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM4 ,DISABLE);
-
-	//  TM_Init(TIM_TypeDef* TIMx, uint16_t Prescaler, uint16_t CounterMode, uint16_t Period, uint16_t ClockDivision)
-	//  TM_Timer_Init(TIM1, 0, TIM_CounterMode_Up, 18009, TIM_CKD_DIV1);
-	//  TM_Init(TIM1, 0, TIM_CounterMode_Up, 0xFFFF, TIM_CKD_DIV1);
-
-	TIM_TimeBaseInitTypeDef timer;
-	//
-	timer.TIM_Prescaler = 0;
-	timer.TIM_CounterMode = TIM_CounterMode_Up;
-	timer.TIM_Period = 18009;
-	timer.TIM_ClockDivision = TIM_CKD_DIV1;
-	timer.TIM_RepetitionCounter = 0;
-	TIM_TimeBaseInit(TIM4, &timer);
-
-	//  void TM_PWM_Init(TIM_TypeDef* TIMx, uint16_t OCMode, uint16_t OutputState, uint16_t OCPolarity, uint16_t Period, uint16_t DutyCycle, uint16_t OCPreload_Enable)
-	//  TM_PWM_Init(TIM1, TIM_OCMode_PWM1, TIM_OutputState_Enable, TIM_OCPolarity_High, 18009, 50, TIM_OCPreload_Enable);
-}
-
-void initializePWMChannel()
-{
-	//    TIM_OCInitTypeDef TIM_OCStruct;
-	//
-	//    /* Common settings */
-	//
-	//    /* PWM mode 2 = Clear on compare match */
-	//    /* PWM mode 1 = Set on compare match */
-	//    TIM_OCStruct.TIM_OCMode = OCMode;
-	//    TIM_OCStruct.TIM_OutputState = OutputState;
-	//    TIM_OCStruct.TIM_OCPolarity = OCPolarity;
-	//
-	///*
-	//    To get proper duty cycle, you have simple equation
-	//
-	//    pulse_length = ((TIM_Period + 1) * DutyCycle) / 100 - 1
-	//
-	//    where DutyCycle is in percent, between 0 and 100%
-	//
-	//    25% duty cycle:     pulse_length = ((18009 + 1) * 25) / 100 - 1 = 4502
-	//    50% duty cycle:     pulse_length = ((18009 + 1) * 50) / 100 - 1 = 9004
-	//    75% duty cycle:     pulse_length = ((18009 + 1) * 75) / 100 - 1 = 13507
-	//    100% duty cycle:    pulse_length = ((18009 + 1) * 100) / 100 - 1 = 18009
-	//
-	//    Remember: if pulse_length is larger than TIM_Period, you will have output HIGH all the time
-	//*/
-	//    TIM_OCStruct.TIM_Pulse = ((Period + 1) * DutyCycle) / 100 - 1 ; /* % duty cycle */
-	//    TIM_OC1Init(TIMx, &TIM_OCStruct);
-	//    TIM_OC1PreloadConfig(TIMx, OCPreload_Enable);
-	//    // TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
-	//
-	//    // GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_TIM1);
-    RCC_APB2PeriphClockCmd(RCC_APB2ENR_AFIOEN ,ENABLE);
-    RCC_APB2PeriphResetCmd(RCC_APB2ENR_AFIOEN ,DISABLE);
-    TIM_OCInitTypeDef outputChannelInit = {0,};
-    outputChannelInit.TIM_OCMode = TIM_OCMode_PWM1;
-    outputChannelInit.TIM_Pulse = 9000;
-    outputChannelInit.TIM_OutputState = TIM_OutputState_Enable;
-    outputChannelInit.TIM_OCPolarity = TIM_OCPolarity_High;
-
-    TIM_OC1Init(TIM4, &outputChannelInit);
-    TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);
-    GPIO_PinRemapConfig(GPIO_Remap_TIM4, ENABLE);
-//    GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_TIM1);
-}
+/* Private function prototypes -----------------------------------------------*/
+void RCC_Configuration(void);
+void GPIO_Configuration(void);
+void TIM1_init(void);
+void TIM4_IC_init(void);
+void TIM1_UP_IRQHandler(void);
+//void TIM1_CC_IRQHandler(void);
+void TIM4_IRQHandler(void);
+void delay(int counter);
 
 int main(void)
 {
-  uint32_t timerValue = 0;
-  uint32_t checkBit = 0;
-  initializeLEDs();
-  initializeTimer();
-  initializePWMChannel();
 
-  timerValue = TIM_GetCounter(TIM4);
-  TIM_Cmd(TIM4, ENABLE);
+  counter = 0;
+  RCC_Configuration();
+  GPIO_Configuration();
 
-//Please check the clock for alternate function
-  while(1)
+  /* Reset SWIM */
+//  GPIO_WriteBit(GPIOB, GPIO_Pin_6, Bit_RESET);
+//  GPIO_WriteBit(GPIOB, GPIO_Pin_6, Bit_SET);
+//  delay(100);
+  GPIO_WriteBit(GPIOB, GPIO_Pin_6, Bit_RESET);
+//  delay(100);
+//  delay(100);
+
+  TIM1_init();
+
+  while (1)
   {
-
-	  checkBit = GPIO_ReadOutputDataBit(GPIOD, GPIO_Pin_12);
-//	  delay(100);
-	  checkBit = GPIO_ReadOutputDataBit(GPIOD, GPIO_Pin_12);
-//	  delay(100);
-	  checkBit = GPIO_ReadOutputDataBit(GPIOD, GPIO_Pin_12);
-//	  delay(100);
-
-	  timerValue = TIM_GetCounter(TIM4);
-	  if(checkBit)//(timerValue > 10000)//(!GPIO_ReadOutputDataBit(GPIOC, GPIO_Pin_13))//(checkBit)// (timerValue > 10000)
-	  {
-//		  GPIO_SetBits(GPIOC, GPIO_Pin_13);
-		  GPIO_WriteBit(GPIOC, GPIO_Pin_13, Bit_SET);
-		  delay(100);
-	  }
-	  else
-	  {
-//		  GPIO_ResetBits(GPIOC, GPIO_Pin_13);
-		  GPIO_WriteBit(GPIOC, GPIO_Pin_13, Bit_RESET);
-		  delay(100);
-	  }
 
   }
 }
 
+/**
+  * @brief  Configures the different system clocks.
+  * @param  None
+  * @retval None
+  */
+void RCC_Configuration(void)
+{
+  /* TIM1, GPIOA, and AFIO clocks enable */
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, ENABLE);
+  RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, DISABLE);
+
+  /* TIM3 clock enable */
+//  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+//  RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM4, DISABLE);
+
+}
+
+/**
+  * @brief  Configure the TIM1 Pins.
+  * @param  None
+  * @retval None
+  */
+void GPIO_Configuration(void)
+{
+  GPIO_InitTypeDef GPIO_InitStructure;
+
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+  /* GPIOB Configuration: reset SWIM pin*/
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+  /* GPIOB Configuration: SWIM_IN pin*/
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_7 | GPIO_Pin_9 | GPIO_Pin_10 ;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; // reset state;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; // reset state;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+//  GPIO_InitTypeDef gpio; //The GPIO_InitTypeDef structure can be referred by stm32f10x_gpio.h.
+//  gpio.GPIO_Pin = GPIO_Pin_13;
+//  gpio.GPIO_Speed = GPIO_Speed_50MHz;
+//  gpio.GPIO_Mode = GPIO_Mode_Out_OD;
+//  GPIO_Init(GPIOC, &gpio);
+//  GPIO_WriteBit(GPIOC, GPIO_Pin_13, Bit_RESET);
+}
+
+void TIM1_init(void)
+{
+  uint16_t TimerPeriod = 0;
+  uint16_t Channel1Pulse = 0;
+
+  TIM_Cmd(TIM1, DISABLE);
+
+  TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
+  TIM_SetCounter(TIM1, 0);
+  TIM_UpdateRequestConfig(TIM1, TIM_UpdateSource_Regular);
+  NVIC_EnableIRQ(TIM1_UP_IRQn);
+  TIM_ITConfig(TIM1, TIM_IT_Update, ENABLE); //Have to put after GPIO
+//  TIM_UpdateDisableConfig(TIM1, DISABLE);
+
+  TimerPeriod = (SystemCoreClock / 4000 ) - 1;
+  Channel1Pulse = (uint16_t) (((uint32_t) 50 * (TimerPeriod - 1)) / 100);
+
+  TM_TIMER_Init(TIM1, 1, TIM_CounterMode_Up, TimerPeriod, TIM_CKD_DIV1, DISABLE);
+
+  TM_PWM_OC_Init(TIM1, TIM_OCMode_PWM1, Channel1Pulse, TIM_OutputState_Enable,
+                 TIM_OCPolarity_High, TIM_OCIdleState_Set, DISABLE);
+//  TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_InActive);
+
+  /* TIM1 Main Output Enable */
+  TIM_CtrlPWMOutputs(TIM1, ENABLE);
+  /* TIM1 counter enable */
+  TIM_Cmd(TIM1, ENABLE);
+
+}
 
 /*
+void TIM4_IC_init(void)
+{
+
+  TIM_Cmd(TIM4, DISABLE);
+
+  TIM_ClearITPendingBit(TIM4, TIM_IT_CC2);
+  TIM_SetCounter(TIM4, 0);
+  NVIC_EnableIRQ(TIM4_IRQn);
+
+  TM_PWM_IC_Init(TIM4,
+                 TIM_Channel_2,
+                 TIM_ICPolarity_Rising,
+                 TIM_ICSelection_DirectTI,
+                 TIM_ICPSC_DIV1,
+                 0x0,
+                 TIM_TS_TI2FP2, //what?
+                 TIM_SlaveMode_Reset,
+                 TIM_MasterSlaveMode_Enable);
+
+   TIM4 counter enable
+  TIM_Cmd(TIM4, ENABLE);
+  TIM_ITConfig(TIM4, TIM_IT_CC2, ENABLE); //Have to put after GPIO
+
+}
+
+*/
+
 void delay(int counter)
 {
     int i;
     for (i = 0; i < counter * 1000; i++) {}
 }
 
-int main(void)
-{
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
-    RCC_APB2PeriphResetCmd(RCC_APB2Periph_GPIOC,DISABLE);
-    GPIO_InitTypeDef gpio;         //The GPIO_InitTypeDef structure can be referred by stm32f10x_gpio.h.
-    gpio.GPIO_Pin = GPIO_Pin_13;
-    gpio.GPIO_Speed = GPIO_Speed_50MHz;
-    gpio.GPIO_Mode = GPIO_Mode_Out_OD;
-    GPIO_Init(GPIOC,&gpio);
 
-//    GPIO_SetBits(GPIOC, GPIO_Pin_13); // LED ON
-    while (1)
-   {
-    	GPIO_SetBits(GPIOC, GPIO_Pin_13); // LED ON
-        delay(1000);
-        GPIO_ResetBits(GPIOC, GPIO_Pin_13); // LED OFF
-        delay(1000);
+/**
+  * @brief  This function handles TIM1 interrupt request.
+  * @param  None
+  * @retval None
+  */
+void TIM1_UP_IRQHandler()
+{
+	uint32_t TimerPeriod = 0;
+	uint16_t Channel1Pulse = 0;
+
+    if(TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET)
+    {
+
+      counter ++;
+
+      if(counter == 1)
+      {
+        TimerPeriod = (SystemCoreClock / 2000 ) - 1;
+        Channel1Pulse = (uint16_t) (((uint32_t) 5 * (TimerPeriod - 1)) / 10);
+        //Prescaler = 1, 1kHz
+        TM_TIMER_Init(TIM1, 1, TIM_CounterMode_Up, TimerPeriod, TIM_CKD_DIV1, DISABLE);
+
+        TM_PWM_OC_Init(TIM1, TIM_OCMode_PWM1, Channel1Pulse, TIM_OutputState_Enable,
+                      TIM_OCPolarity_High, TIM_OCIdleState_Set, DISABLE);
+      }
+      else if(counter == 5)
+      {
+        TimerPeriod = (SystemCoreClock / 4000 ) - 1;
+        Channel1Pulse = (uint16_t) (((uint32_t) 5 * (TimerPeriod - 1)) / 10);
+        //Prescaler = 1, 2kHz
+        TM_TIMER_Init(TIM1, 1, TIM_CounterMode_Up, TimerPeriod, TIM_CKD_DIV1, DISABLE);
+
+        TM_PWM_OC_Init(TIM1, TIM_OCMode_PWM1, Channel1Pulse, TIM_OutputState_Enable,
+                       TIM_OCPolarity_High, TIM_OCIdleState_Set, DISABLE);
+      }
+      else if(counter == 9)
+      {
+//    	  TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
+    	  TM_PWM_OC_Init(TIM1, TIM_ForcedAction_Active, Channel1Pulse, TIM_OutputState_Enable,
+    	                 TIM_OCPolarity_High, TIM_OCIdleState_Set, DISABLE);
+//    	  counter = 0;
+//    	  TIM_Cmd(TIM1, DISABLE);
+//    	  TIM_CtrlPWMOutputs(TIM1, DISABLE);
+      }
+
+      TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
     }
 }
-*/
 
+void TIM4_IRQHandler(void)
+{
+
+}
