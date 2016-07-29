@@ -1,43 +1,32 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
-   <processor signature="arm-none-eabi-gcc 4.8.1 mingw32 -mcpu=cortex-m3 -mthumb -g2 -Wall -O0 -c -DSTM32F103C8T6 -DSTM32F103xB -DUSE_STDPERIPH_DRIVER -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app\CMSIS -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app\Hardware -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\startup -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app\Config -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger">
-      <target file="swim.o" lastModified="155a0f31fc0">
-         <source file="..\..\..\app\swim.c" lastModified="155a0f30a26"/>
+   <processor signature="arm-none-eabi-gcc 4.8.1 mingw32 -mcpu=cortex-m3 -mthumb -g2 -Wall -O0 -c -DSTM32F103C8T6 -DSTM32F103xB -DUSE_STDPERIPH_DRIVER -I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\startup -I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\CMSIS -I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger -I..\..\..\..\..\..\..\Desktop\Github -I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app -I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\Config -I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\Hardware">
+      <target file="startup_stm32f103xb.o" lastModified="15635bc1d11">
+         <source file="..\..\..\startup\startup_stm32f103xb.s" lastModified="15612870c83"/>
       </target>
-      <target file="system_stm32f1xx.o" lastModified="155800ebd88">
-         <source file="..\..\..\startup\system_stm32f1xx.c" lastModified="155800413aa"/>
+      <target file="stm32f10x_tim.o" lastModified="15635bc1ad7">
+         <source file="..\..\..\app\Hardware\stm32f10x_tim.c" lastModified="1561287070b"/>
       </target>
-      <target file="stm32f10x_it.o" lastModified="155a1050d00">
-         <source file="..\..\..\app\Hardware\stm32f10x_it.c" lastModified="155a10505fd"/>
+      <target file="timer.o" lastModified="15636505343">
+         <source file="..\..\..\app\timer.c" lastModified="15636504d2b"/>
       </target>
-      <target file="Interrupt.o" lastModified="155d8a433a7">
-         <source file="..\..\..\app\Interrupt.c" lastModified="155d8a3d7a8"/>
+      <target file="swim.o" lastModified="156364583ff">
+         <source file="..\..\..\app\swim.c" lastModified="1561137b8c2"/>
       </target>
-      <target file="misc.o" lastModified="155a0fa26c4">
-         <source file="..\..\..\app\Hardware\misc.c" lastModified="12e9da93720"/>
+      <target file="configuration.o" lastModified="15636226b84">
+         <source file="..\..\..\app\configuration.c" lastModified="156362266ac"/>
       </target>
-   </processor>
-   <processor signature="arm-none-eabi-gcc 4.8.1 mingw32 -mcpu=cortex-m3 -mthumb -g2 -Wall -O0 -c -DSTM32F103C8T6 -DSTM32F103xB -DUSE_STDPERIPH_DRIVER -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app\Hardware -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app\CMSIS -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\startup -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app\Config -I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger">
-      <target file="startup_stm32f103xb.o" lastModified="155d8b59d45">
-         <source file="..\..\..\startup\startup_stm32f103xb.s" lastModified="1558004139b"/>
+      <target file="system_stm32f10x.o" lastModified="15635bc1bd1">
+         <source file="..\..\..\app\Config\system_stm32f10x.c" lastModified="15612870305"/>
       </target>
-      <target file="stm32f10x_tim.o" lastModified="155d8b59b71">
-         <source file="..\..\..\app\Hardware\stm32f10x_tim.c" lastModified="15580041002"/>
+      <target file="main.o" lastModified="156365226a0">
+         <source file="..\..\..\app\main.c" lastModified="156365222f4"/>
       </target>
-      <target file="system_stm32f10x.o" lastModified="155d8b59bfe">
-         <source file="..\..\..\app\Config\system_stm32f10x.c" lastModified="155a081e5a3"/>
+      <target file="stm32f10x_gpio.o" lastModified="15635bc1c67">
+         <source file="..\..\..\app\Hardware\stm32f10x_gpio.c" lastModified="15612870701"/>
       </target>
-      <target file="main.o" lastModified="1560d251d31">
-         <source file="..\..\..\app\main.c" lastModified="1560d2516ab"/>
-      </target>
-      <target file="stm32f10x_gpio.o" lastModified="155d8b59ca9">
-         <source file="..\..\..\app\Hardware\stm32f10x_gpio.c" lastModified="15580040ff3"/>
-      </target>
-      <target file="stm32f10x_rcc.o" lastModified="155d8b59df1">
-         <source file="..\..\..\app\Hardware\stm32f10x_rcc.c" lastModified="15580041002"/>
-      </target>
-      <target file="Timer.o" lastModified="155d959579c">
-         <source file="..\..\..\app\Timer.c" lastModified="155d95886f0"/>
+      <target file="stm32f10x_rcc.o" lastModified="15635bc1dc5">
+         <source file="..\..\..\app\Hardware\stm32f10x_rcc.c" lastModified="15612870701"/>
       </target>
    </processor>
 </history>

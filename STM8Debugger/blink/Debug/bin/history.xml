@@ -1,14 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
-   <processor signature="4.9.3 -mcpu=cortex-m3 -mthumb -g2 -Map=blink.map -O0 --gc-sections -LC:/Users/D203C-01/Desktop/STM8VisualDebugger/STM8Debugger -TC:/Users/D203C-01/Desktop/STM8VisualDebugger/STM8Debugger/stm32f103c8_flash.ld -g">
-      <target file="blink.elf" lastModified="1560d251f89">
-         <source file="..\obj\main.o" lastModified="1560d251d31"/>
-         <source file="..\obj\stm32f10x_tim.o" lastModified="155d8b59b71"/>
-         <source file="..\obj\stm32f10x_rcc.o" lastModified="155d8b59df1"/>
-         <source file="..\obj\stm32f10x_gpio.o" lastModified="155d8b59ca9"/>
-         <source file="..\obj\system_stm32f10x.o" lastModified="155d8b59bfe"/>
-         <source file="..\obj\Timer.o" lastModified="155d959579c"/>
-         <source file="..\obj\startup_stm32f103xb.o" lastModified="155d8b59d45"/>
+   <processor signature="4.9.3 -mcpu=cortex-m3 -mthumb -g2 -Map=blink.map -O0 --gc-sections -LC:/Users/D203C-01/Desktop/Github/STM8Debugger -TC:/Users/D203C-01/Desktop/Github/STM8Debugger/stm32f103c8_flash.ld -g">
+      <target file="blink.elf" lastModified="156365228f8">
+         <source file="..\obj\stm32f10x_tim.o" lastModified="15635bc1ad7"/>
+         <source file="..\obj\stm32f10x_gpio.o" lastModified="15635bc1c67"/>
+         <source file="..\obj\configuration.o" lastModified="15636226b84"/>
+         <source file="..\obj\startup_stm32f103xb.o" lastModified="15635bc1d11"/>
+         <source file="..\obj\timer.o" lastModified="15636505343"/>
+         <source file="..\obj\main.o" lastModified="156365226a0"/>
+         <source file="..\obj\stm32f10x_rcc.o" lastModified="15635bc1dc5"/>
+         <source file="..\obj\system_stm32f10x.o" lastModified="15635bc1bd1"/>
+         <source file="..\obj\swim.o" lastModified="156364583ff"/>
       </target>
    </processor>
 </history>

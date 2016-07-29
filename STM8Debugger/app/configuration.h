@@ -5,6 +5,6 @@
 #include "stm32f10x_rcc.h"
 
 void configurePin(GPIO_TypeDef* port, uint16_t pinNum, GPIOMode_TypeDef mode);
-void configurationTIM1_Channel1(void);
+
 #endif // __configuration_H__
 

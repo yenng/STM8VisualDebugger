@@ -1,6 +1,7 @@
 #ifndef __SWIM_H__
 #define __SWIM_H__
 #include "stm32f10x_gpio.h"
+#include "configuration.h"
 
 #define SWIM_IN_PIN           GPIO_Pin_7 | GPIO_Pin_9 | GPIO_Pin_10
 #define SWIM_IN_PORT          GPIOB
@@ -11,14 +12,15 @@
 #define SWIM_RESET_OUT_PIN    GPIO_Pin_6
 #define SWIM_RESET_PORT       GPIOB
 
-#define SWIM_Reset()   	       configurePin(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN, GPIO_Mode_Out_OD);    \
-                               GPIO_ResetBits(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN);
-//                               configurePin(SWIM_RESET_PORT, SWIM_RESET_IN_PIN, GPIO_Mode_IN_FLOATING);
-#define SWIM_RESET_DEASSERT()  GPIO_SetBits(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN);
+#define SWIM_RESET_Init()      configurePin(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN, GPIO_Mode_Out_PP);\
+                               configurePin(SWIM_RESET_PORT, SWIM_RESET_IN_PIN, GPIO_Mode_IN_FLOATING)
+#define SWIM_RESET()   	       GPIO_ResetBits(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN)
+#define SWIM_RESET_DEASSERT()  GPIO_SetBits(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN)
     
-//#define swimInInit()           configurePin(SWIM_IN_PORT, SWIM_IN_PIN, GPIO_Mode_IN_FLOATING);
+#define swimInInit()           configurePin(SWIM_IN_PORT, SWIM_IN_PIN, GPIO_Mode_IN_FLOATING)
 #define swimOutInit()          configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN, GPIO_Mode_AF_OD); \
                                configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN_PASSIVE, GPIO_Mode_IN_FLOATING);
+
 
 #endif // __SWIM_H__
 

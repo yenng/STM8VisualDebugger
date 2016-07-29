@@ -52,12 +52,4 @@ void configurePin(GPIO_TypeDef* port, uint16_t pinNum, GPIOMode_TypeDef mode)
   GPIO_Init(port, &GPIO_InitStructure);
 }
 
-void configurationTIM1_Channel1(void)
-{
-  /* TIM1, GPIOA, and AFIO clocks enable */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
-  RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, DISABLE);
-  
-  //Channel_1 == SWIM_OUT_PIN
-  configurePin(GPIOA, GPIO_Pin_8, GPIO_Mode_AF_OD);
-}
+
