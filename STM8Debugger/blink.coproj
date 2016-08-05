@@ -73,17 +73,17 @@
   <Components path="./"/>
   <LocalComponents/>
   <Files>
-    <File name="Hardware/stm32f10x_tim.c" path="app/Hardware/stm32f10x_tim.c" type="1"/>
     <File name="Hardware/stm32f10x_tim.h" path="app/Hardware/stm32f10x_tim.h" type="1"/>
-    <File name="Config/system_stm32f10x.h" path="app/Config/system_stm32f10x.h" type="1"/>
-    <File name="Hardware" path="" type="2"/>
+    <File name="Hardware/stm32f10x_tim.c" path="app/Hardware/stm32f10x_tim.c" type="1"/>
     <File name="CMSIS/core_cmFunc.h" path="app/CMSIS/core_cmFunc.h" type="1"/>
+    <File name="Hardware" path="" type="2"/>
+    <File name="Config/system_stm32f10x.h" path="app/Config/system_stm32f10x.h" type="1"/>
     <File name="Startup/stm32f1xx.h" path="startup/stm32f1xx.h" type="1"/>
     <File name="app" path="" type="2"/>
     <File name="Hardware/stm32f10x_gpio.c" path="app/Hardware/stm32f10x_gpio.c" type="1"/>
     <File name="app/configuration.c" path="app/configuration.c" type="1"/>
-    <File name="Hardware/stm32f10x.h" path="app/Hardware/stm32f10x.h" type="1"/>
     <File name="Hardware/stm32f10x_conf.h" path="app/Hardware/stm32f10x_conf.h" type="1"/>
+    <File name="Hardware/stm32f10x.h" path="app/Hardware/stm32f10x.h" type="1"/>
     <File name="Startup/startup_stm32f103xb.s" path="startup/startup_stm32f103xb.s" type="1"/>
     <File name="CMSIS" path="" type="2"/>
     <File name="app/timer.c" path="app/timer.c" type="1"/>
@@ -96,9 +96,9 @@
     <File name="app/configuration.h" path="app/configuration.h" type="1"/>
     <File name="Config/system_stm32f10x.c" path="app/Config/system_stm32f10x.c" type="1"/>
     <File name="app/swim.c" path="app/swim.c" type="1"/>
-    <File name="Startup/stm32f103xb.h" path="startup/stm32f103xb.h" type="1"/>
-    <File name="Startup" path="" type="2"/>
     <File name="CMSIS/core_cmInstr.h" path="app/CMSIS/core_cmInstr.h" type="1"/>
+    <File name="Startup" path="" type="2"/>
+    <File name="Startup/stm32f103xb.h" path="startup/stm32f103xb.h" type="1"/>
     <File name="app/timer.h" path="app/timer.h" type="1"/>
     <File name="app/swim.h" path="app/swim.h" type="1"/>
     <File name="Config" path="" type="2"/>

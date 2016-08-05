@@ -14,7 +14,7 @@
 
 #define SWIM_RESET_Init()      configurePin(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN, GPIO_Mode_Out_PP);\
                                configurePin(SWIM_RESET_PORT, SWIM_RESET_IN_PIN, GPIO_Mode_IN_FLOATING)
-#define SWIM_RESET()   	       GPIO_ResetBits(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN)
+#define SWIM_RESET()           GPIO_ResetBits(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN)
 #define SWIM_RESET_DEASSERT()  GPIO_SetBits(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN)
     
 #define swimInInit()           configurePin(SWIM_IN_PORT, SWIM_IN_PIN, GPIO_Mode_IN_FLOATING)

@@ -19,19 +19,6 @@ void TIM1_init(void)
   TIM_ITConfig(TIM1, TIM_IT_Update, ENABLE); //Have to put after GPIO
 //  TIM_UpdateDisableConfig(TIM1, DISABLE);
 
-/*  TimerPeriod = (SystemCoreClock / 8000 ) - 1;
-  Channel1Pulse = (uint16_t) (((uint32_t) 50 * (TimerPeriod - 1)) / 100);
-
-  TM_TIMER_Init(TIM1, 1, TIM_CounterMode_Up, TimerPeriod, TIM_CKD_DIV1, DISABLE);
-
-  TM_PWM_OC_Init(TIM1, TIM_OCMode_PWM1, Channel1Pulse, TIM_OutputState_Enable,
-                 TIM_OCPolarity_High, TIM_OCIdleState_Set, DISABLE);
-
-
-  TIM_Cmd(TIM1, ENABLE);*/
-
-//  TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
-//  TIM_CtrlPWMOutputs(TIM1, ENABLE);
 }
 
 void configurationTIM1_Channel1(void)
@@ -44,18 +31,42 @@ void configurationTIM1_Channel1(void)
 //  configurePin(GPIOA, GPIO_Pin_8, GPIO_Mode_AF_OD);
 }
 
+// void timerConfigure(TIM_TypeDef* TIMx, uint16_t frequency)
+// {
+  // uint16_t timerPeriod = 0;
+  // uint16_t prescaler = 0;
+
+  // RCC_ClocksTypeDef RCC_Clocks;
+  // RCC_GetClocksFreq(&RCC_Clocks);
+  // prescaler = (RCC_Clocks.PCLK2_Frequency / (frequency * 65535));
+
+  // timerPeriod = (RCC_Clocks.PCLK2_Frequency / (frequency * (prescaler + 1))) - 1;
+  // channel1Pulse = (uint16_t) (((uint32_t) 50 * (timerPeriod - 1)) / 100);
+
+  // TM_TIMER_Init(TIM1, prescaler, TIM_CounterMode_Up, timerPeriod, TIM_CKD_DIV1, DISABLE);
+
+  // TM_PWM_OC_Init(TIM1, channelx, TIM_OCMode_PWM1, channel1Pulse, TIM_OutputState_Enable,
+                 // TIM_OCPolarity_High, TIM_OCIdleState_Set, DISABLE);
+// //  TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
+// }
+
+
 void timerConfigurePWM(TIM_TypeDef* TIMx,  uint16_t channelx, uint16_t frequency)
 {
-  uint16_t TimerPeriod = 0;
-  uint16_t Channel1Pulse = 0;
+  uint16_t timerPeriod = 0;
+  uint16_t channel1Pulse = 0;
+  uint16_t prescaler = 0;
 
+  RCC_ClocksTypeDef RCC_Clocks;
+  RCC_GetClocksFreq(&RCC_Clocks);
+  prescaler = (RCC_Clocks.PCLK2_Frequency / (frequency * 65535));
 
-  TimerPeriod = (SystemCoreClock / (frequency * 2)) - 1;
-  Channel1Pulse = (uint16_t) (((uint32_t) 50 * (TimerPeriod - 1)) / 100);
+  timerPeriod = (RCC_Clocks.PCLK2_Frequency / (frequency * (prescaler + 1))) - 1;
+  channel1Pulse = (uint16_t) (((uint32_t) 50 * (timerPeriod - 1)) / 100);
 
-  TM_TIMER_Init(TIM1, 1, TIM_CounterMode_Up, TimerPeriod, TIM_CKD_DIV1, DISABLE);
+  TM_TIMER_Init(TIM1, prescaler, TIM_CounterMode_Up, timerPeriod, TIM_CKD_DIV1, DISABLE);
 
-  TM_PWM_OC_Init(TIM1, channelx, TIM_OCMode_PWM1, Channel1Pulse, TIM_OutputState_Enable,
+  TM_PWM_OC_Init(TIM1, channelx, TIM_OCMode_PWM1, channel1Pulse, TIM_OutputState_Enable,
                  TIM_OCPolarity_High, TIM_OCIdleState_Set, DISABLE);
 //  TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
 }

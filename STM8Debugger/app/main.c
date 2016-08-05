@@ -26,88 +26,102 @@ int main(void)
 
   counter = 0;
 
-  /* Reset SWIM */
+/*   Reset SWIM*/
 //  SWIM_Reset();
 //  delay(1);
 //  SWIM_RESET_DEASSERT();
-  configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN, GPIO_Mode_Out_PP);
-  GPIO_SetBits(SWIM_OUT_PORT, SWIM_OUT_PIN);
+//  configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN, GPIO_Mode_Out_PP);
+//  GPIO_SetBits(SWIM_OUT_PORT, SWIM_OUT_PIN);
 //  configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN, GPIO_Mode_AF_OD);
 //  swimInInit();
-  swimOutInit();
-  TIM1_init();
-  timerConfigurePWM(TIM1, channel1, 4000);
-//  delay(5);
+
+
+//  SWIM_RESET_Init();
 //  SWIM_RESET();
-  SWIM_RESET_Init();
-  SWIM_RESET_DEASSERT();
-//  delay(3);
-  delay(3);
-  SWIM_RESET();
+  //  delay(1);
+//  delay(18);
+//  SWIM_RESET_DEASSERT();
+/*  swimOutInit();
+  swimInInit();
+  TIM1_init();
+
+  timerConfigurePWM(TIM1, channel1, 500);
   TIM_Cmd(TIM1, ENABLE);
   TIM_CtrlPWMOutputs(TIM1, ENABLE);
-//  void configurePin(GPIO_TypeDef* port, uint16_t pinNum, GPIOMode_TypeDef mode);
+  delay(20);
+  SWIM_RESET_Init();
+  SWIM_RESET();
+  delay(20);*/
 
-//  delay(1);
+  SWIM_RESET_Init();
+
+  swimOutInit();
+  swimInInit();
+  TIM1_init();
+
+  RCC_ClocksTypeDef RCC_Clocks;
+  RCC_GetClocksFreq(&RCC_Clocks);
+
+  uint16_t timerPeriod = 0;
+  uint16_t channel1Pulse = 0;
+  timerPeriod = (RCC_Clocks.PCLK2_Frequency / ( 30000 )) - 1;
+  channel1Pulse = (uint16_t) (((uint32_t) 4 * (timerPeriod - 1)) / 100);
+
+  TM_TIMER_Init(TIM1, 1, TIM_CounterMode_Up, timerPeriod, TIM_CKD_DIV1, DISABLE);
+
+  TM_PWM_OC_Init(TIM1, channel1, TIM_OCMode_PWM1, channel1Pulse, TIM_OutputState_Enable,
+                 TIM_OCPolarity_High, TIM_OCIdleState_Set, DISABLE);
+//  timerConfigurePWM(TIM1, channel1, 30000);
+  TIM_Cmd(TIM1, ENABLE);
+  TIM_CtrlPWMOutputs(TIM1, ENABLE);
+  SWIM_RESET();
 
 
   while (1)
   {
-//	  SWIM_Reset();
-//	  delay(100);
-//	  SWIM_RESET_DEASSERT();
-//
 //	  delay(100);
   }
 }
 
-
-
-
-
-
 void delay(int counter)
 {
     int i;
-    for (i = 0; i < counter * 1000; i++) {}
+    for (i = 0; i < counter * 100; i++) {}
 }
-
 
 /**
   * @brief  This function handles TIM1 interrupt request.
+  * 		Handle SWIM Activation Sequence.
   * @param  None
   * @retval None
   */
 void TIM1_UP_IRQHandler()
 {
 //	uint32_t TimerPeriod = 0;
-//	uint16_t Channel1Pulse = 0;
+	uint16_t Channel1Pulse = 0;
 
-    if(TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET)
+  if(TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET)
+  {
+
+    counter ++;
+
+    if(counter == 1)
     {
-
-      counter ++;
-
-      if(counter == 1)
-      {
-        timerConfigurePWM(TIM1, channel1, 1000);
-      }
-      else if(counter == 5)
-      {
-        timerConfigurePWM(TIM1, channel1, 2000);
-      }
-      else if(counter == 9)
-      {
-    	  TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
-//    	  TM_PWM_OC_Init(TIM1, channel1, TIM_ForcedAction_Active, Channel1Pulse, TIM_OutputState_Enable,
-//    	                 TIM_OCPolarity_High, TIM_OCIdleState_Set, DISABLE);
-//    	  counter = 0;
-    	  TIM_Cmd(TIM1, DISABLE);
-    	  TIM_CtrlPWMOutputs(TIM1, DISABLE);
-      }
-
-      TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
+      timerConfigurePWM(TIM1, channel1, 1000);
     }
+    else if(counter == 5)
+    {
+      timerConfigurePWM(TIM1, channel1, 2000);
+    }
+    else if(counter == 9)
+    {
+  	  TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
+//  	  TIM_Cmd(TIM1, DISABLE);  //Cannot disable
+//  	  TIM_CtrlPWMOutputs(TIM1, DISABLE); //Cannot disable
+    }
+
+    TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
+  }
 }
 
 /*
