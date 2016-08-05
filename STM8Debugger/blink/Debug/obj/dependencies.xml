@@ -34,10 +34,6 @@
       </source>
       <source file="..\..\..\startup\startup_stm32f103xb.s" lastModified="15612870c83">
       </source>
-      <source file="..\..\..\app\timer.h" lastModified="15636225fa4">
-         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
-         <include file="..\..\..\app\configuration.h"/>
-      </source>
       <source file="..\..\..\app\Hardware\stm32f10x_rcc.h" lastModified="15612870701">
          <include file="..\..\..\app\Hardware\stm32f10x.h"/>
       </source>
@@ -95,7 +91,7 @@
       </source>
       <source file="..\..\..\startup\startup_stm32f103xb.s" lastModified="15612870c83">
       </source>
-      <source file="..\..\..\app\timer.h" lastModified="15636225fa4">
+      <source file="..\..\..\app\timer.h" lastModified="1565a52e76b">
          <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
          <include file="..\..\..\app\configuration.h"/>
       </source>
@@ -105,7 +101,7 @@
       <source file="..\..\..\app\interrupt.h" lastModified="155d8a3a497">
          <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
       </source>
-      <source file="..\..\..\app\timer.c" lastModified="15659a614c7">
+      <source file="..\..\..\app\timer.c" lastModified="1565a55130b">
          <include file="..\..\..\app\timer.h"/>
          <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
          <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
@@ -127,7 +123,7 @@
          <include file="..\..\..\app\Config\system_stm32f10x.h"/>
          <include file="..\..\..\app\Hardware\stm32f10x_conf.h"/>
       </source>
-      <source file="..\..\..\app\swim.h" lastModified="1565890a338">
+      <source file="..\..\..\app\swim.h" lastModified="1565a962f70">
          <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
          <include file="..\..\..\app\configuration.h"/>
       </source>

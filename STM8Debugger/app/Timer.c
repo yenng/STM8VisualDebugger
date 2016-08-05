@@ -31,27 +31,22 @@ void configurationTIM1_Channel1(void)
 //  configurePin(GPIOA, GPIO_Pin_8, GPIO_Mode_AF_OD);
 }
 
-// void timerConfigure(TIM_TypeDef* TIMx, uint16_t frequency)
-// {
-  // uint16_t timerPeriod = 0;
-  // uint16_t prescaler = 0;
+void timerConfigurePeriod(TIM_TypeDef* TIMx, uint32_t nSecond)
+{
+  uint16_t timerPeriod = 0;
+  uint16_t prescaler = 0;
 
-  // RCC_ClocksTypeDef RCC_Clocks;
-  // RCC_GetClocksFreq(&RCC_Clocks);
-  // prescaler = (RCC_Clocks.PCLK2_Frequency / (frequency * 65535));
+  RCC_ClocksTypeDef RCC_Clocks;
+  RCC_GetClocksFreq(&RCC_Clocks);
+  prescaler = (RCC_Clocks.PCLK2_Frequency / ((1/nSecond) * 65535));
+  timerPeriod = (RCC_Clocks.PCLK2_Frequency / ((1/nSecond) * (prescaler + 1))) - 1;
+  
+  TM_TIMER_Init(TIM1, prescaler, TIM_CounterMode_Up, timerPeriod, TIM_CKD_DIV1, DISABLE);
 
-  // timerPeriod = (RCC_Clocks.PCLK2_Frequency / (frequency * (prescaler + 1))) - 1;
-  // channel1Pulse = (uint16_t) (((uint32_t) 50 * (timerPeriod - 1)) / 100);
-
-  // TM_TIMER_Init(TIM1, prescaler, TIM_CounterMode_Up, timerPeriod, TIM_CKD_DIV1, DISABLE);
-
-  // TM_PWM_OC_Init(TIM1, channelx, TIM_OCMode_PWM1, channel1Pulse, TIM_OutputState_Enable,
-                 // TIM_OCPolarity_High, TIM_OCIdleState_Set, DISABLE);
-// //  TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
-// }
+}
 
 
-void timerConfigurePWM(TIM_TypeDef* TIMx,  uint16_t channelx, uint16_t frequency)
+void timerConfigurePWM(TIM_TypeDef* TIMx,  uint16_t channelx, uint16_t frequency, int dutyCycle)
 {
   uint16_t timerPeriod = 0;
   uint16_t channel1Pulse = 0;
@@ -62,7 +57,7 @@ void timerConfigurePWM(TIM_TypeDef* TIMx,  uint16_t channelx, uint16_t frequency
   prescaler = (RCC_Clocks.PCLK2_Frequency / (frequency * 65535));
 
   timerPeriod = (RCC_Clocks.PCLK2_Frequency / (frequency * (prescaler + 1))) - 1;
-  channel1Pulse = (uint16_t) (((uint32_t) 50 * (timerPeriod - 1)) / 100);
+  channel1Pulse = (uint16_t) (((uint32_t) dutyCycle * (timerPeriod - 1)) / 100);
 
   TM_TIMER_Init(TIM1, prescaler, TIM_CounterMode_Up, timerPeriod, TIM_CKD_DIV1, DISABLE);
 

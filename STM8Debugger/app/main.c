@@ -10,11 +10,14 @@
 #include "interrupt.h"
 #include "swim.h"
 #include "configuration.h"
+#include "malloc.h"
 
 uint16_t counter = 0;
-
+SwimState swimState;
 /* Private function prototypes -----------------------------------------------*/
-
+int SWRST[5] = {0, 0, 0, 0, 0};
+int highBitFormat[22] = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+int lowBitFormat[22] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1};
 // void TIM4_IC_init(void);
 void TIM1_UP_IRQHandler(void);
 //void TIM1_CC_IRQHandler(void);
@@ -53,24 +56,14 @@ int main(void)
   SWIM_RESET();
   delay(20);*/
 
+  swimState.state = SWIM_ACTIVATION;
+  swimState.counter = 0;
   SWIM_RESET_Init();
 
   swimOutInit();
   swimInInit();
   TIM1_init();
-
-  RCC_ClocksTypeDef RCC_Clocks;
-  RCC_GetClocksFreq(&RCC_Clocks);
-
-  uint16_t timerPeriod = 0;
-  uint16_t channel1Pulse = 0;
-  timerPeriod = (RCC_Clocks.PCLK2_Frequency / ( 30000 )) - 1;
-  channel1Pulse = (uint16_t) (((uint32_t) 4 * (timerPeriod - 1)) / 100);
-
-  TM_TIMER_Init(TIM1, 1, TIM_CounterMode_Up, timerPeriod, TIM_CKD_DIV1, DISABLE);
-
-  TM_PWM_OC_Init(TIM1, channel1, TIM_OCMode_PWM1, channel1Pulse, TIM_OutputState_Enable,
-                 TIM_OCPolarity_High, TIM_OCIdleState_Set, DISABLE);
+  timerConfigurePWM(TIM1, channel1, 30000, 4);
 //  timerConfigurePWM(TIM1, channel1, 30000);
   TIM_Cmd(TIM1, ENABLE);
   TIM_CtrlPWMOutputs(TIM1, ENABLE);
@@ -103,22 +96,67 @@ void TIM1_UP_IRQHandler()
   if(TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET)
   {
 
-    counter ++;
+    switch(swimState.state)
+    {
+      case SWIM_ACTIVATION:
+          swimState.counter++;
+          if(swimState.counter == 1)
+          {
+            timerConfigurePWM(TIM1, channel1, 1000, 50);
+          }
+          else if(swimState.counter == 5)
+          {
+            timerConfigurePWM(TIM1, channel1, 2000, 50);
+          }
+          else
+          {
+            
+            if(swimState.counter == 9)
+            {
+              TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
+              timerConfigurePeriod(TIM1, 17000);
+              swimState.state = SWIM_COMMAND;
+              swimState.bitFormatCounter = 22;
+              swimState.cmdBitCounter = 0;
+              swimState.cmd[0] = SWRST[0];
+            }
+          
+          }
+          break;
+          
+      case SWIM_COMMAND:
+          timerConfigurePeriod(TIM1, 125);
 
-    if(counter == 1)
-    {
-      timerConfigurePWM(TIM1, channel1, 1000);
+          if(swimState.bitFormatCounter > 21)
+          {
+            if(swimState.cmdBitCounter == 5)
+              break;
+            
+            if(swimState.cmd[swimState.cmdBitCounter])
+              swimState.bitFormat[0] = highBitFormat[0];
+            else
+              swimState.bitFormat[0] = lowBitFormat[0];
+            swimState.bitFormatCounter = 0;
+          }
+          else
+          {
+            if(swimState.bitFormat[swimState.bitFormatCounter] == 1)
+              TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
+            else
+              TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_InActive);
+            
+            swimState.bitFormatCounter++;
+          }
+          
+          break;
+      default:
+        swimState.state = SWIM_ACTIVATION;
+      break;
     }
-    else if(counter == 5)
-    {
-      timerConfigurePWM(TIM1, channel1, 2000);
-    }
-    else if(counter == 9)
-    {
-  	  TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
-//  	  TIM_Cmd(TIM1, DISABLE);  //Cannot disable
-//  	  TIM_CtrlPWMOutputs(TIM1, DISABLE); //Cannot disable
-    }
+//    counter ++;
+
+
+
 
     TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
   }

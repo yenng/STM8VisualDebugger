@@ -21,6 +21,21 @@
 #define swimOutInit()          configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN, GPIO_Mode_AF_OD); \
                                configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN_PASSIVE, GPIO_Mode_IN_FLOATING);
 
+typedef enum
+{
+  SWIM_ACTIVATION,
+  SWIM_COMMAND,
+}SwimStatus;
+
+typedef struct
+{
+  SwimStatus state;
+  int counter;
+  int cmd[5];
+  int cmdBitCounter;
+  int bitFormat[22];
+  int bitFormatCounter;
+}SwimState;
 
 #endif // __SWIM_H__
 
