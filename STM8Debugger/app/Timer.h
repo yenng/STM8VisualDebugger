@@ -2,11 +2,20 @@
 #define __Timer_H__
 
 #include "stm32f10x_tim.h"
+#include "configuration.h"
 TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 //TIM_OCInitTypeDef  TIM_OCInitStructure;
 TIM_OCInitTypeDef outputChannelInit;
 TIM_ICInitTypeDef TIM_ICInitStructure;
+#define channel1 1
+#define channel2 2
+#define channel3 3
+#define channel4 4
 
+void TIM1_init(void);
+void configurationTIM1_Channel1(void);
+void timerConfigurePeriod(TIM_TypeDef* TIMx, uint32_t nSecond);
+void timerConfigurePWM(TIM_TypeDef* TIMx,  uint16_t channelx, uint16_t frequency, int dutyCycle);
 void TM_TIMER_Init(TIM_TypeDef* TIMx,
                   uint16_t Prescaler,
                   uint16_t CounterMode,
@@ -21,6 +30,7 @@ void TM_TIMER_Init(TIM_TypeDef* TIMx,
                   // uint16_t OCPreload_Enable);
                   
 void TM_PWM_OC_Init(TIM_TypeDef* TIMx,
+					uint16_t channelx,
                     uint16_t OCMode,
                     uint16_t Pulse,
                     uint16_t OutputState,
@@ -37,5 +47,7 @@ void TM_PWM_IC_Init(TIM_TypeDef* TIMx,
                     uint16_t InputTriggerSource,
                     uint16_t SlaveMode,
                     uint16_t MasterSlaveMode);
+
+
 #endif //__Timer_H__
 

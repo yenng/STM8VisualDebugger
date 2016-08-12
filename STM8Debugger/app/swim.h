@@ -1,8 +1,44 @@
-//#ifndef SWIM_H_
-//#define SWIM_H_
-//
-//#include "stm32f10x_gpio.h"
-//
+#ifndef __SWIM_H__
+#define __SWIM_H__
+#include "stm32f10x_gpio.h"
+#include "configuration.h"
+
+#define SWIM_IN_PIN           GPIO_Pin_7 | GPIO_Pin_9 | GPIO_Pin_10
+#define SWIM_IN_PORT          GPIOB
+#define SWIM_OUT_PIN          GPIO_Pin_8 
+#define SWIM_OUT_PIN_PASSIVE  GPIO_Pin_11
+#define SWIM_OUT_PORT         GPIOA
+#define SWIM_RESET_IN_PIN     GPIO_Pin_5
+#define SWIM_RESET_OUT_PIN    GPIO_Pin_6
+#define SWIM_RESET_PORT       GPIOB
+
+#define SWIM_RESET_Init()      configurePin(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN, GPIO_Mode_Out_PP);\
+                               configurePin(SWIM_RESET_PORT, SWIM_RESET_IN_PIN, GPIO_Mode_IN_FLOATING)
+#define SWIM_RESET()           GPIO_ResetBits(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN)
+#define SWIM_RESET_DEASSERT()  GPIO_SetBits(SWIM_RESET_PORT, SWIM_RESET_OUT_PIN)
+    
+#define swimInInit()           configurePin(SWIM_IN_PORT, SWIM_IN_PIN, GPIO_Mode_IN_FLOATING)
+#define swimOutInit()          configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN, GPIO_Mode_AF_OD); \
+                               configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN_PASSIVE, GPIO_Mode_IN_FLOATING);
+
+typedef enum
+{
+  SWIM_ACTIVATION,
+  SWIM_COMMAND,
+}SwimStatus;
+
+typedef struct
+{
+  SwimStatus state;
+  int counter;
+  int cmd[5];
+  int cmdBitCounter;
+  int bitFormat[22];
+  int bitFormatCounter;
+}SwimState;
+
+#endif // __SWIM_H__
+
 //#define SWIM_OUT_PIN      GPIO_Pin_1
 //#define SWIM_OUT_PORT     GPIOC
 //#define RESET_PIN         GPIO_Pin_0
@@ -83,4 +119,3 @@
 //uint32_t swim_send_header(uint8_t header);
 //uint32_t swim_send_byte(uint8_t byte);
 //
-//#endif /* SWIM_H_ */
