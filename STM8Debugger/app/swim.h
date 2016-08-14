@@ -1,7 +1,9 @@
 #ifndef __SWIM_H__
 #define __SWIM_H__
+
 #include "stm32f10x_gpio.h"
 #include "configuration.h"
+#include "Timer.h"
 
 #define SWIM_IN_PIN           GPIO_Pin_7 | GPIO_Pin_9 | GPIO_Pin_10
 #define SWIM_IN_PORT          GPIOB
@@ -21,21 +23,25 @@
 #define swimOutInit()          configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN, GPIO_Mode_AF_OD); \
                                configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN_PASSIVE, GPIO_Mode_IN_FLOATING);
 
+
 typedef enum
 {
+  SWIM_DO_NOTHING,
   SWIM_ACTIVATION,
-  SWIM_COMMAND,
+  SWIM_LISTEN_SYNCHRONIZATION,
+  SWIM_COMMAND_SRST,
+  SWIM_COMMAND_ROTF,
+  SWIM_COMMAND_WOTF,
+  SWIM_COMMAND_ACK,
 }SwimStatus;
 
 typedef struct
 {
   SwimStatus state;
   int counter;
-  int cmd[5];
   int cmdBitCounter;
-  int bitFormat[22];
-  int bitFormatCounter;
 }SwimState;
+
 
 #endif // __SWIM_H__
 

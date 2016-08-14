@@ -1,54 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dependencies>
-   <includePath signature="/I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\startup /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\CMSIS /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger /I..\..\..\..\..\..\..\Desktop\Github /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\Config /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\Hardware">
-      <source file="..\..\..\app\swim.c" lastModified="1561137b8c2">
-         <include file="..\..\..\app\swim.h"/>
-      </source>
-      <source file="..\..\..\app\configuration.h" lastModified="15636226698">
-         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
-         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
-      </source>
-      <source file="..\..\..\app\configuration.c" lastModified="156362266ac">
-         <include file="..\..\..\app\configuration.h"/>
-      </source>
-      <source file="..\..\..\app\Hardware\stm32f10x_gpio.h" lastModified="15612870701">
-         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
-      </source>
-      <source file="..\..\..\app\CMSIS\cmsis_gcc.h" lastModified="156128702f1">
-      </source>
-      <source file="..\..\..\app\Hardware\stm32f10x_gpio.c" lastModified="15612870701">
-         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
-         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
-      </source>
-      <source file="..\..\..\app\Hardware\stm32f10x_tim.h" lastModified="1561287070b">
-         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
-      </source>
-      <source file="..\..\..\app\Config\system_stm32f10x.h" lastModified="156128706ed">
-      </source>
-      <source file="..\..\..\app\Hardware\stm32f10x_tim.c" lastModified="1561287070b">
-         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
-         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
-      </source>
-      <source file="..\..\..\app\Config\system_stm32f10x.c" lastModified="15612870305">
-         <include file="..\..\..\app\Config\stm32f10x.h"/>
-      </source>
-      <source file="..\..\..\startup\startup_stm32f103xb.s" lastModified="15612870c83">
-      </source>
-      <source file="..\..\..\app\Hardware\stm32f10x_rcc.h" lastModified="15612870701">
-         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
-      </source>
-      <source file="..\..\..\app\interrupt.h" lastModified="155d8a3a497">
-         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
-      </source>
-      <source file="..\..\..\app\Hardware\stm32f10x_rcc.c" lastModified="15612870701">
-         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
-      </source>
-      <source file="..\..\..\app\Hardware\stm32f10x_conf.h" lastModified="156128706f7">
-         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
-      </source>
-   </includePath>
    <includePath signature="/I..\..\..\..\..\..\..\Desktop\GithubSTM8 /I..\..\..\..\..\..\..\Desktop\GithubSTM8\STM8Debugger\app\Hardware /I..\..\..\..\..\..\..\Desktop\GithubSTM8\STM8Debugger\app\CMSIS /I..\..\..\..\..\..\..\Desktop\GithubSTM8\STM8Debugger /I..\..\..\..\..\..\..\Desktop\GithubSTM8\STM8Debugger\app /I..\..\..\..\..\..\..\Desktop\GithubSTM8\STM8Debugger\startup /I..\..\..\..\..\..\..\Desktop\GithubSTM8\STM8Debugger\app\Config">
-      <source file="..\..\..\app\swim.c" lastModified="1561137b8c2">
+      <source file="..\..\..\app\swim.c" lastModified="1567d9df513">
          <include file="..\..\..\app\swim.h"/>
       </source>
       <source file="..\..\..\app\configuration.h" lastModified="15636226698">
@@ -91,7 +44,7 @@
       </source>
       <source file="..\..\..\startup\startup_stm32f103xb.s" lastModified="15612870c83">
       </source>
-      <source file="..\..\..\app\timer.h" lastModified="1565a52e76b">
+      <source file="..\..\..\app\timer.h" lastModified="1567e3e534e">
          <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
          <include file="..\..\..\app\configuration.h"/>
       </source>
@@ -101,7 +54,7 @@
       <source file="..\..\..\app\interrupt.h" lastModified="155d8a3a497">
          <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
       </source>
-      <source file="..\..\..\app\timer.c" lastModified="1565a55130b">
+      <source file="..\..\..\app\timer.c" lastModified="1567e45dc00">
          <include file="..\..\..\app\timer.h"/>
          <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
          <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
@@ -115,6 +68,17 @@
          <include file="..\..\..\app\Config\system_stm32f10x.h"/>
          <include file="..\..\..\app\Hardware\stm32f10x_conf.h"/>
       </source>
+      <source file="..\..\..\app\main.c" lastModified="1567e77d455">
+         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
+         <include file="..\..\..\app\timer.h"/>
+         <include file="..\..\..\app\interrupt.h"/>
+         <include file="..\..\..\app\swim.h"/>
+         <include file="..\..\..\app\configuration.h"/>
+      </source>
       <source file="..\..\..\app\Hardware\stm32f10x_conf.h" lastModified="156128706f7">
          <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
       </source>
@@ -123,9 +87,54 @@
          <include file="..\..\..\app\Config\system_stm32f10x.h"/>
          <include file="..\..\..\app\Hardware\stm32f10x_conf.h"/>
       </source>
-      <source file="..\..\..\app\swim.h" lastModified="1565a962f70">
+      <source file="..\..\..\app\swim.h" lastModified="1567da78d4c">
          <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
          <include file="..\..\..\app\configuration.h"/>
+         <include file="..\..\..\app\timer.h"/>
+      </source>
+   </includePath>
+   <includePath signature="/I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\startup /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\CMSIS /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger /I..\..\..\..\..\..\..\Desktop\Github /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\Config /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\Hardware">
+      <source file="..\..\..\app\configuration.h" lastModified="15636226698">
+         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
+      </source>
+      <source file="..\..\..\app\configuration.c" lastModified="156362266ac">
+         <include file="..\..\..\app\configuration.h"/>
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_gpio.h" lastModified="15612870701">
+         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
+      </source>
+      <source file="..\..\..\app\CMSIS\cmsis_gcc.h" lastModified="156128702f1">
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_gpio.c" lastModified="15612870701">
+         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_tim.h" lastModified="1561287070b">
+         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
+      </source>
+      <source file="..\..\..\app\Config\system_stm32f10x.h" lastModified="156128706ed">
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_tim.c" lastModified="1561287070b">
+         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
+         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
+      </source>
+      <source file="..\..\..\app\Config\system_stm32f10x.c" lastModified="15612870305">
+         <include file="..\..\..\app\Config\stm32f10x.h"/>
+      </source>
+      <source file="..\..\..\startup\startup_stm32f103xb.s" lastModified="15612870c83">
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_rcc.h" lastModified="15612870701">
+         <include file="..\..\..\app\Hardware\stm32f10x.h"/>
+      </source>
+      <source file="..\..\..\app\interrupt.h" lastModified="155d8a3a497">
+         <include file="..\..\..\app\Hardware\stm32f10x_tim.h"/>
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_rcc.c" lastModified="15612870701">
+         <include file="..\..\..\app\Hardware\stm32f10x_rcc.h"/>
+      </source>
+      <source file="..\..\..\app\Hardware\stm32f10x_conf.h" lastModified="156128706f7">
+         <include file="..\..\..\app\Hardware\stm32f10x_gpio.h"/>
       </source>
    </includePath>
    <includePath signature="/I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\startup /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\CMSIS /I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger\STM8Debugger\app /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger /I..\..\..\..\..\..\..\Desktop\Github /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app /I..\..\..\..\..\..\..\Desktop\STM8VisualDebugger /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\Config /I..\..\..\..\..\..\..\Desktop\Github\STM8Debugger\app\Hardware">
