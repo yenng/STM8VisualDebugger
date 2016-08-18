@@ -6,30 +6,26 @@
 
 void TIM1_init(void)
 {
-//  uint16_t TimerPeriod = 0;
-//  uint16_t Channel1Pulse = 0;
   TIM_Cmd(TIM1, DISABLE);
   configRccTIM1();
-
 
   TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
   TIM_SetCounter(TIM1, 0);
   TIM_UpdateRequestConfig(TIM1, TIM_UpdateSource_Regular);
   NVIC_EnableIRQ(TIM1_UP_IRQn);
   TIM_ITConfig(TIM1, TIM_IT_Update, ENABLE); //Have to put after GPIO
-//  TIM_UpdateDisableConfig(TIM1, DISABLE);
 
 }
-
+/** @brief Configure the TIM4 channel2 as PWM input capture
+  *
+  */
 void TIM4_init(void)
 {
-
   TIM_Cmd(TIM4, DISABLE);
   configRccTIM4();
 
   TIM_ClearITPendingBit(TIM4, TIM_IT_CC2);
   TIM_SetCounter(TIM4, 0);
-//  TIM_UpdateRequestConfig(TIM1, TIM_UpdateSource_Regular);
   NVIC_EnableIRQ(TIM4_IRQn);
 
   TIM_Cmd(TIM4, ENABLE);
@@ -40,17 +36,14 @@ void TIM4_init(void)
 
 void configRccTIM1(void)
 {
-  /* TIM1, GPIOA, and AFIO clocks enable */
+  /* TIM1 clocks enable , reset disable*/
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1 , ENABLE);
   RCC_APB2PeriphResetCmd(RCC_APB2Periph_TIM1 , DISABLE);
-
-  //Channel_1 == SWIM_OUT_PIN
-//  configurePin(GPIOA, GPIO_Pin_8, GPIO_Mode_AF_OD);
 }
 
 void configRccTIM4(void)
 {
-  /* TIM1, GPIOA, and AFIO clocks enable */
+  /* TIM4 clocks enable , reset disable*/
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, DISABLE);
 }
@@ -69,7 +62,6 @@ void timerConfigurePeriod(TIM_TypeDef* TIMx, uint32_t frequency)
   TM_TIMER_Init(TIM1, prescaler, TIM_CounterMode_Up, timerPeriod, TIM_CKD_DIV1, DISABLE);
 
 }
-
 
 void timerConfigurePWM(TIM_TypeDef* TIMx,  uint16_t channelx, uint32_t frequency, int dutyCycle, uint16_t TIM_OCMode)
 {
@@ -108,22 +100,8 @@ void TM_TIMER_Init(TIM_TypeDef* TIMx,
   TIM_ARRPreloadConfig(TIMx, ARRPreloadConfig);
 }
 
-/*   The Timer pulse is calculated as follows:
-   - ChannelxPulse = DutyCycle * (TIM1_Period - 1) / 100
-	 -----------------------------------------------------------------------
- * Compute the value to be set in ARR regiter to generate signal frequency at 1 Khz
- * SystemCoreClock is too fast to generate 1Khz
- * So, we put a prescale = 1 (1+1=2)
- * (72M /2) / (frequency )
- */
-//  TimerPeriod = (SystemCoreClock / 2000 ) - 1;
-/* Compute CCR1 value to generate a duty cycle at 50% for channel 1 and 1N */
-//  Channel1Pulse = (uint16_t) (((uint32_t) 5 * (TimerPeriod - 1)) / 10);
-// Prescaler = 0, 60kHz
-// OCmode2, Inactive Before CNT < CCRx.
-// 96% Off = 16u Sec
 void TM_PWM_OC_Init(TIM_TypeDef* TIMx,
-					uint16_t channelx,
+                    uint16_t channelx,
                     uint16_t OCMode,
                     uint16_t Pulse,
                     uint16_t OutputState,
@@ -175,15 +153,16 @@ void TM_PWM_IC_Init(TIM_TypeDef* TIMx,
   TIM_ICInitStructure.TIM_ICFilter = ICFilter;
 
   TIM_PWMIConfig(TIMx, &TIM_ICInitStructure);
+  
+  // /* Select the TIM4 Input Trigger: TI1FP1 */
+  // TIM_SelectInputTrigger(TIMx, TIM_TS_TI1FP1);
 
-  /* Select the TIM3 Input Trigger: TI2FP2 */
-//  TIM_SelectInputTrigger(TIMx, InputTriggerSource);
+  // /* Select the slave Mode: Reset Mode */
+  // TIM_SelectSlaveMode(TIMx, TIM_SlaveMode_Reset);
 
-  /* Select the slave Mode: Reset Mode */
-//  TIM_SelectSlaveMode(TIM3, SlaveMode);
+  // /* Enable the Master/Slave Mode */
+  // TIM_SelectMasterSlaveMode(TIMx, TIM_MasterSlaveMode_Enable);
 
-  /* Enable the Master/Slave Mode */
-//  TIM_SelectMasterSlaveMode(TIM3, MasterSlaveMode);
 }
 
 uint32_t getTimerARR(TIM_TypeDef* TIMx)

@@ -26,7 +26,6 @@ int main(void)
 {
 
   counter = 0;
-
   swimState.state = SWIM_ACTIVATION;
   swimState.counter = 0;
 //  SWIM_RESET_Init();
@@ -35,9 +34,7 @@ int main(void)
   swimInInit();
   swimOutInit();
   TIM1_init();
-//  timerConfigurePWM(TIM1, channel1, 30000, 4, TIM_OCMode_PWM1);
   timerConfigurePWM(TIM1, channel1, 30000, 4, TIM_OCMode_Inactive);
-//  timerConfigurePWM(TIM1, channel1, 30000);
   TIM_Cmd(TIM1, ENABLE);
   TIM_CtrlPWMOutputs(TIM1, ENABLE);
   delay(20);
@@ -58,35 +55,31 @@ void delay(int counter)
 
 /**
   * @brief  This function handles TIM1 interrupt request.
-  * 		Handle SWIM Activation Sequence.
+  *         Handle SWIM Activation Sequence.
   * @param  None
   * @retval None
   */
 void TIM1_UP_IRQHandler()
 {
-//	uint32_t TimerPeriod = 0;
-//	uint16_t Channel1Pulse = 0;
-
   if(TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET)
   {
-
     switch(swimState.state)
     {
       case SWIM_ACTIVATION:
           swimActivation();
           break;
-
+      case SWIM_READY_TO_SEND:
+      
       case SWIM_COMMAND_SRST:
           swimCommandSRST();
           break;
 
       case SWIM_COMMAND_ACK:
-//        TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
           break;
-      case SWIM_DO_NOTHING:
-//    	  TIM_Cmd(TIM1, DISABLE);
-          TIM_CtrlPWMOutputs(TIM1, DISABLE);
-    	  break;
+      // case SWIM_LISTEN_SYNCHRONIZATION:
+          // TIM_Cmd(TIM1, DISABLE);
+          // TIM_CtrlPWMOutputs(TIM1, DISABLE);
+          break;
       default:
         swimState.state = SWIM_ACTIVATION;
       break;
@@ -103,22 +96,17 @@ void TIM4_IRQHandler(void)
   if(TIM_GetITStatus(TIM4, TIM_IT_CC2) != RESET)
   {
     switch(swimState.state)
-	{
+    {
       case SWIM_LISTEN_SYNCHRONIZATION:
-
-    	  swimState.counter = 0;
-	      swimState.state = SWIM_ACTIVATION;
-	      NVIC_EnableIRQ(TIM1_UP_IRQn);
-
-      break;
-
+        swimListenSynchronization();
+        break;
       default:
-          swimState.state = SWIM_DO_NOTHING;
-
-      break;
-	}
+        swimState.state = SWIM_ACTIVATION;
+        break;
+    }
   }
-      TIM_ClearITPendingBit(TIM4, TIM_IT_CC2);
+      
+  TIM_ClearITPendingBit(TIM4, TIM_IT_CC2);
 }
 
 void swimActivation(void)
@@ -128,61 +116,97 @@ void swimActivation(void)
 
 	swimState.counter++;
 
-    if(swimState.counter == 1)
+  if(swimState.counter == 1)
+  {
+    timerConfigurePWM(TIM1, channel1, 1000, 50, TIM_OCMode_PWM1);
+  }
+  else if(swimState.counter == 5)
+  {
+      /* from 1k Hz ARR */
+  	ARRvalue = getTimerARR(TIM1);
+
+  	/* divide it into 2kHZ */
+  	ARRvalue = ARRvalue / 2;
+
+  	/* Pwm duty = 50 % */
+  	CRRvalue = ARRvalue / 2;
+
+  	TIM_SetAutoreload(TIM1, ARRvalue);
+  	TIM_SetCompare1(TIM1, CRRvalue);
+  }
+  else
+  {
+
+    if(swimState.counter == 9)
     {
-      timerConfigurePWM(TIM1, channel1, 1000, 50, TIM_OCMode_PWM1);
+      /* from 2k Hz ARR */
+      ARRvalue = getTimerARR(TIM1);
+
+      /* divide it into 50kHZ */
+      ARRvalue = ARRvalue / 50;
+
+      TIM_SetAutoreload(TIM1, ARRvalue);
+
+      configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN, GPIO_Mode_IN_FLOATING);
+      TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
+//       timerConfigurePWM(TIM1, channel1, 50000, 0, TIM_OCMode_Active);
+      swimState.state = SWIM_LISTEN_SYNCHRONIZATION;
+      NVIC_DisableIRQ(TIM1_UP_IRQn);
+      TIM4_init();
+      
+      /* TIM4 configuration: PWM Input mode ------------------------
+         The external signal is connected to TIM4 CH2 pin (PB.07),
+         The Falling edge is used as active edge,
+      ------------------------------------------------------------ */
+      TM_PWM_IC_Init(TIM4, TIM_Channel_2, TIM_ICPolarity_Falling, TIM_ICSelection_DirectTI,
+    		          TIM_ICPSC_DIV1, 0x0);
+//             TI2_Config(TIM4, TIM_ICPolarity_Falling, TIM_ICSelection_DirectTI, 0x0);
+      TIM_Cmd(TIM4, ENABLE);
+      swimState.counter = 0;
     }
-    else if(swimState.counter == 5)
-    {
-        /* from 1k Hz ARR */
-    	ARRvalue = getTimerARR(TIM1);
+  }
 
-    	/* divide it into 2kHZ */
-    	ARRvalue = ARRvalue / 2;
+}
 
-    	/* Pwm duty = 50 % */
-    	CRRvalue = ARRvalue / 2;
+void swimListenSynchronization(void)
+{
+  uint16_t counterValue = 0;
+  uint16_t period = 0;
 
-    	TIM_SetAutoreload(TIM1, ARRvalue);
-    	TIM_SetCompare1(TIM1, CRRvalue);
-    }
+  swimState.counter++;
+
+  if(swimState.counter == 1)
+  {
+    TIM_SetCounter(TIM4, 0);
+  }
+  else
+  {
+    counterValue = TIM_GetCounter(TIM4);
+    RCC_ClocksTypeDef RCC_Clocks;
+    RCC_GetClocksFreq(&RCC_Clocks);
+
+    /*  16uSecs = 62500 Hz */
+    frequency = RCC_Clocks.PCLK1_Frequency / counterValue;
+    
+    if(frequency < 62500)
+      swimState.state = SWIM_COMMAND_WOTF;
     else
-    {
-
-      if(swimState.counter == 9)
-      {
-        /* from 2k Hz ARR */
-    	ARRvalue = getTimerARR(TIM1);
-
-        /* divide it into 50kHZ */
-        ARRvalue = ARRvalue / 50;
-
-        TIM_SetAutoreload(TIM1, ARRvalue);
-
-//        TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
-        configurePin(SWIM_OUT_PORT, SWIM_OUT_PIN, GPIO_Mode_IN_FLOATING);
-//              timerConfigurePeriod(TIM1, 60000);
-
-//        timerConfigurePWM(TIM1, channel1, 50000, 0, TIM_OCMode_Active);
-//        NVIC_DisableIRQ(TIM1_UP_IRQn);
-//        swimState.state = SWIM_LISTEN_SYNCHRONIZATION;
-//        swimState.state = SWIM_COMMAND_SRST;
-        swimState.cmdBitCounter = 0;
-
-//        TIM4_init();
-        /* brief  Configure the TI2 as Input. */
-//        TM_PWM_IC_Init(TIM4, TIM_Channel_2, TIM_ICPolarity_Falling, TIM_ICSelection_DirectTI,
-//      		          TIM_ICPSC_DIV1, 0x0);
-//              TI2_Config(TIM4, TIM_ICPolarity_Falling, TIM_ICSelection_DirectTI, 0x0);
-      }
-    }
-
+      swimState.state = SWIM_ACTIVATION;
+    
+    swimState.counter = 0;
+    swimState.cmdBitCounter = 0;
+    NVIC_DisableIRQ(TIM4_IRQn);
+    TIM1_init();
+    timerConfigurePWM(TIM1, channel1, 3000000, 0, TIM_OCMode_Active));
+    TIM_Cmd(TIM1, ENABLE);
+    TIM_CtrlPWMOutputs(TIM1, ENABLE);
+  }
 }
 
 void swimCommandSRST(void)
 {
-    if(swimState.cmdBitCounter == 0)
-    {
+  if(swimState.cmdBitCounter == 0)
+  {
 //      timerConfigurePWM(TIM1, channel1, 60000, 1, TIM_OCMode_Active);
 
 //        	if(GPIO_ReadInputDataBit(SWIM_IN_PORT, SWIM_IN_PIN))
@@ -190,86 +214,15 @@ void swimCommandSRST(void)
 //        	else
 //              TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
 
-      timerConfigurePWM(TIM1, channel1, 363636, 91, TIM_OCMode_PWM2);
+    timerConfigurePWM(TIM1, channel1, 363636, 91, TIM_OCMode_PWM2);
 
-    }
-    else if(swimState.cmdBitCounter == 5)
-    {
-      TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_InActive);
+  }
+  else if(swimState.cmdBitCounter == 5)
+  {
+    TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_InActive);
 //    	swimState.state = SWIM_DO_NOTHING;
 //         TIM_ForcedOC1Config(TIM1, TIM_ForcedAction_Active);
-    }
-    swimState.cmdBitCounter++;
+  }
+  swimState.cmdBitCounter++;
 
 }
-/*
-void TIM4_IC_init(void)
-{
-
-  TIM_Cmd(TIM4, DISABLE);
-
-  TIM_ClearITPendingBit(TIM4, TIM_IT_CC2);
-  TIM_SetCounter(TIM4, 0);
-  NVIC_EnableIRQ(TIM4_IRQn);
-
-  TM_PWM_IC_Init(TIM4,
-                 TIM_Channel_2,
-                 TIM_ICPolarity_Rising,
-                 TIM_ICSelection_DirectTI,
-                 TIM_ICPSC_DIV1,
-                 0x0,
-                 TIM_TS_TI2FP2, //what?
-                 TIM_SlaveMode_Reset,
-                 TIM_MasterSlaveMode_Enable);
-
-   TIM4 counter enable
-  TIM_Cmd(TIM4, ENABLE);
-  TIM_ITConfig(TIM4, TIM_IT_CC2, ENABLE); //Have to put after GPIO
-
-}
-
-*/
-
-
-
-
-///**
-//  * @brief  Configures the different system clocks.
-//  * @param  None
-//  * @retval None
-//  */
-//void RCC_Configuration(void)
-//{
-//  /* TIM1, GPIOA, and AFIO clocks enable */
-//  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO, ENABLE); //| RCC_APB2Periph_AFIO
-//  RCC_APB2PeriphResetCmd(RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO, DISABLE);
-//
-//  /* TIM3 clock enable */
-////  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
-////  RCC_APB1PeriphResetCmd(RCC_APB1Periph_TIM4, DISABLE);
-//
-//}
-//
-//
-//void GPIO_Configuration(void)
-//{
-//  GPIO_InitTypeDef GPIO_InitStructure;
-//
-////  /* GPIOB Configuration: reset SWIM pin*/
-////  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
-////  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-////  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-////  GPIO_Init(GPIOB, &GPIO_InitStructure);
-//
-//  /* GPIOB Configuration: SWIM_IN pin*/
-//  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_7 | GPIO_Pin_9 | GPIO_Pin_10 ;
-//  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; // reset state;
-//  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-//  GPIO_Init(GPIOB, &GPIO_InitStructure);
-//
-//  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
-//  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; // reset state;
-//  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-//  GPIO_Init(GPIOA, &GPIO_InitStructure);
-//
-//}
