@@ -7,128 +7,131 @@ package visual.debugger;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 
 /**
  *
  * @author Yen
  */
 public class VisualDebugger {
+     
 
 public static void main (String [] args) throws Exception {
-    HashMap<String, AddressItem> addMap = new HashMap<>();
-    HashMap<Integer, Integer> lineNo = new HashMap<>();
-    //call the ExtractAddress() function.
-    int line = 0;
-    int lineAssembly = 0;
-    int lineC = 0;
-    String add = null;
+    Display display = new Display( );
+    Shell shell = new Shell(display);
+    Shell s = new Shell(shell);
+    Shell s1 = new Shell(shell);
+    HashMap<String, String> lineNo = new HashMap<>();
+    HashMap<String, ArrayList> lineNo1 = new HashMap<>();
+    Table t = new Table(s, SWT.MULTI|SWT.BORDER|SWT.FULL_SELECTION);
+    Table t1 = new Table (s1, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
+    Color blue = display.getSystemColor(SWT.COLOR_BLUE);
+    shell.setSize(500,500);
+    Button Astep = new Button (shell, SWT.PUSH);
+    Astep.setText ("Assembly Step");
+    Astep.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                int Aline = t1.getSelectionIndex();
+                if(Aline<0)
+                    t1.setSelection(0);
+                else
+                    t1.setSelection(++Aline);
+                new SelectAssembly(t1,t,lineNo,lineNo1);
+            }
+    });
+    Button close = new Button (shell, SWT.PUSH);
+    close.setText ("Close");
+    close.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                display.dispose ();
+            }
+    });
+    shell.setDefaultButton (close);
+    shell.setLayout (new RowLayout ());
     
-    ExtractAddress.ExtractAddress("acia.map",addMap);
     
-    //String to let hex string have 8 characters with 0 in front
-    String ZEROES = "00000000";
-    FileReader in = null;
-    String  thisLine = null;
-    Display display = new Display ();
-    Shell shell = new Shell (display);
-    shell.setLayout(new GridLayout());
-    Table table = new Table (shell, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
-    table.setLinesVisible (false);
-    table.setHeaderVisible (false);
-    GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-    data.heightHint = 200;
-
-    //pattern will detect {integers, " ", integers, " ", heximal, " ", Assembly code, " ", variable.}
-    //which is the line with details that needed by debugger to display.
-    String pattern = "(\\d+)(\\s+)([0-9a-fA-F]+)(\\s+)([0-9a-fA-F]+)(\\s+)(\\w+)(\\s)(\\S+)";
-    //patterm will find the line that shows the location on the c file.
-    String pattern1 = "(\\d+)(\\s+);(\\s+)(\\d+)(.+)";
-    //this pattern use to find the assembly address (find the word switch and get the address name.)
-    String addPattern = "(\\d+)(\\s+)switch(\\s+)(\\S+)";
-    Pattern r = Pattern.compile(pattern);
-    Pattern r1 = Pattern.compile(pattern1);//get the C code location to link to assembly code location
-    Pattern r2 = Pattern.compile(addPattern);//get assembly address.
-
-    table.setLayoutData(data);
-
-    String[] titles = {"Column 0", "Column 1", "Column 2", "Column 3"};
-    for (int i=0; i<titles.length; i++) {
-            TableColumn column = new TableColumn (table, SWT.NONE);
-            column.setText (titles [i]);
-    }
-    //read details from the acia.ls file.
-    try{
-       // open input stream test.txt for reading purpose.
-       in = new FileReader("acia.ls");
-       BufferedReader br = new BufferedReader(in);
-       while ((thisLine = br.readLine()) != null) {
-           Matcher m = r.matcher(thisLine);
-           Matcher m1 = r1.matcher(thisLine);
-           Matcher m2 = r2.matcher(thisLine);
-           //System.out.println(thisLine);
-           if(m2.find()){
-                AddressItem myStr = addMap.get("acia"+ m2.group(4));
-                //System.out.println(m2.group(1)+ "\t" + m2.group(4) + "\t" + myStr.length + "\t" + myStr.addr);
-                line = Integer.parseInt(m2.group(1));
-                add = myStr.addr;
-           }
-           if(m1.find()){
-               //print the location of .c file.
-               lineAssembly = Integer.parseInt(m1.group(1));
-               lineC = Integer.parseInt(m1.group(4));
-               //System.out.println(lineAssembly+"\t"+lineC);
-               lineNo.put(lineC,lineAssembly);
-               //System.out.println(lineNo.get(lineC));
-           }
-           if(m.find()){
-                //System.out.println(m.group(3));
-                int Val = 0;
-                String[] part = m.group().split("(\\s+)");
-                TableItem item = new TableItem (table, SWT.NONE);
-                GetAddress.GetAddress(thisLine);
-                int loc = Integer.parseInt(part[0]);
-                //example:
-                // in acia.text, starting address is 808a
-                //          2084                    switch  .text
-                //          2087    0000    88      push    a
-                //loc = 2087, line = 2084,
-                //     so the real address should be 0000 + 808a = 808a
-                if (loc>line)
-                    Val = Integer.parseInt(part[1], 16)+Integer.parseInt(add,16);
-                
-                //System.out.println(part[0]);
-                //System.out.print(Val + "  ");
-                //System.out.println(Long.toHexString(Val));
-                String address = Integer.toHexString(Val);
-                //System.out.println(address);
-                part[1] = address.length() <= 10 ? ZEROES.substring(address.length()) + address : address;
-                for (int i = 1; i<5;i++)
-                    item.setText (i-1, part[i]);
-                //System.out.println("");
-           }
-       }       
-    }catch(Exception e){
-       e.printStackTrace();
-    }
-    for (int i=0; i<titles.length; i++) {
-            table.getColumn (i).pack ();
-    }
-    shell.pack ();
-    shell.open ();
+    
+    
+    shell.open( );
+    
+    new DisplayC("Acia.c",shell,s,t);
+    new DisplayAssembly("acia.ls",shell,s1,t1,lineNo,lineNo1);
+    
+    
+    
+    t.addListener (SWT.Selection, e -> {
+            String string = "";
+            TableItem [] selection = t.getSelection ();
+            for (int i=0; i<selection.length; i++) 
+                string += selection [i];
+            String lineC = string.substring(11,string.length()-1);
+            
+            
+    });
+    
+    //press on the assembly code.
+    t1.addListener (SWT.Selection, e -> {
+        TableItem item = (TableItem)e.item;
+        item.setBackground(blue);
+        new SelectAssembly(t1,t,lineNo,lineNo1);
+    });
+    t1.addListener (SWT.DefaultSelection, e -> {
+        new SelectAssembly(t1,t,lineNo,lineNo1);
+    });
+    
+    t1.setSelection(0);
+    s.open();
+    s1.open();
     while (!shell.isDisposed ()) {
             if (!display.readAndDispatch ()) display.sleep ();
     }
     display.dispose ();
 }
-} 
+
+    private static class SelectAssembly {
+        public SelectAssembly(Table AssemblyTable, Table CTable, HashMap<String, String> lineNo,HashMap<String, ArrayList> lineNo1) {
+            String string = "";
+            TableItem [] selection = AssemblyTable.getSelection ();
+            int Aline = AssemblyTable.getSelectionIndex();
+            for (int i=0; i<selection.length; i++) 
+                string += selection [i];
+            String lineAssembly = string.substring(11,string.length()-1);
+            String lineC = lineNo.get(lineAssembly);
+            
+            ArrayList x = lineNo1.get(lineC);
+            int index = x.indexOf(lineAssembly);
+            int size = x.size()-index-1;
+            
+            AssemblyTable.select(Aline-index,Aline+size);
+            //if(lineAssembly==lineNo1.get(lineC).assemblyLine)
+            //int index = AssemblyTable.getSelectionIndex();
+            //System.out.println (lineAssembly + "," + lineC +","+ index);
+            CTable.setSelection(Integer.parseInt(lineC)-1);
+        }
+    }
+}

@@ -16,9 +16,7 @@ import java.util.regex.Pattern;
  */
 public class ExtractAddress {
     
-    public ExtractAddress() {}
-
-    public static void ExtractAddress(String file, HashMap addressMap) throws Exception{
+    public ExtractAddress(String file, HashMap addressMap) {
         HashMap<String, AddressItem> addMap;
         addMap = addressMap;
         String fileName_t = null;
