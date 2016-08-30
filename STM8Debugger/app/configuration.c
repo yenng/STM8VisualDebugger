@@ -1,4 +1,4 @@
-#include "configuration.h"
+include "configuration.h"
 
 void configurePin(GPIO_TypeDef* port, uint16_t pinNum, GPIOMode_TypeDef mode)
 {
