@@ -42,10 +42,23 @@ public class VisualDebugger {
 public static void main (String [] args) throws Exception {
     Display display = new Display( );
     Shell shell = new Shell(display);
-    //Shell s = new Shell(shell);
-    //Shell s1 = new Shell(shell);
+    Shell s = new Shell(shell);
+    s.setText("Register Value");
+    shell.setLayout(new GridLayout());
+    
     HashMap<String, String> lineNo = new HashMap<>();
     HashMap<String, ArrayList> lineNo1 = new HashMap<>();
+    Table tRegVal = new Table(s,SWT.MULTI|SWT.BORDER|SWT.FULL_SELECTION);
+    tRegVal.setLinesVisible (false);
+    tRegVal.setHeaderVisible (false);
+    String[] titles = {"Register", "Value"};
+    for (int i=0; i<titles.length; i++) {
+            TableColumn column = new TableColumn (tRegVal, SWT.NONE);
+            column.setText (titles [i]);
+    }
+    TableItem reg = new TableItem (tRegVal, SWT.NONE);
+    reg.setText("X");
+    
     Table t = new Table(shell, SWT.MULTI|SWT.BORDER|SWT.FULL_SELECTION);
     Table t1 = new Table (shell, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
     Color blue = display.getSystemColor(SWT.COLOR_BLUE);
@@ -76,6 +89,21 @@ public static void main (String [] args) throws Exception {
                 new SelectAssembly(t1,t,lineNo,lineNo1);
             }
     });
+    Button Halt = new Button (shell, SWT.PUSH);
+    Halt.setText ("Halt");
+    Halt.addSelectionListener(new SelectionAdapter() {
+            
+    });
+    Button Resume = new Button (shell, SWT.PUSH);
+    Resume.setText ("Resume");
+    Resume.addSelectionListener(new SelectionAdapter() {
+            
+    });
+    Button Run = new Button (shell, SWT.PUSH);
+    Run.setText ("Run");
+    Run.addSelectionListener(new SelectionAdapter() {
+            
+    });
     Button close = new Button (shell, SWT.PUSH);
     close.setText ("Close");
     close.addSelectionListener(new SelectionAdapter() {
@@ -89,7 +117,7 @@ public static void main (String [] args) throws Exception {
     shell.setDefaultButton (close);
     shell.setLayout (new RowLayout ());
     
-    shell.open( );
+    //shell.open( );
     
     new DisplayC("Acia.c",shell,shell,t);
     new DisplayAssembly("acia.ls",shell,shell,t1,lineNo,lineNo1);
@@ -115,7 +143,8 @@ public static void main (String [] args) throws Exception {
     
     t1.setSelection(0);
     shell.open();
-    //s1.open();
+    s.pack();
+    s.open();
     while (!shell.isDisposed ()) {
             if (!display.readAndDispatch ()) display.sleep ();
     }
