@@ -42,17 +42,30 @@ public class VisualDebugger {
 public static void main (String [] args) throws Exception {
     Display display = new Display( );
     Shell shell = new Shell(display);
-    Shell s = new Shell(shell);
-    Shell s1 = new Shell(shell);
+    //Shell s = new Shell(shell);
+    //Shell s1 = new Shell(shell);
     HashMap<String, String> lineNo = new HashMap<>();
     HashMap<String, ArrayList> lineNo1 = new HashMap<>();
-    Table t = new Table(s, SWT.MULTI|SWT.BORDER|SWT.FULL_SELECTION);
-    Table t1 = new Table (s1, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
+    Table t = new Table(shell, SWT.MULTI|SWT.BORDER|SWT.FULL_SELECTION);
+    Table t1 = new Table (shell, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
     Color blue = display.getSystemColor(SWT.COLOR_BLUE);
     shell.setSize(500,500);
     Button Astep = new Button (shell, SWT.PUSH);
     Astep.setText ("Assembly Step");
     Astep.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                int Aline = t1.getSelectionIndex();
+                if(Aline<0)
+                    t1.setSelection(0);
+                else
+                    t1.setSelection(++Aline);
+                new SelectAssembly(t1,t,lineNo,lineNo1);
+            }
+    });
+    Button Cstep = new Button (shell, SWT.PUSH);
+    Cstep.setText ("C Step");
+    Cstep.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 int Aline = t1.getSelectionIndex();
@@ -71,18 +84,15 @@ public static void main (String [] args) throws Exception {
                 display.dispose ();
             }
     });
+    
+    
     shell.setDefaultButton (close);
     shell.setLayout (new RowLayout ());
     
-    
-    
-    
     shell.open( );
     
-    new DisplayC("Acia.c",shell,s,t);
-    new DisplayAssembly("acia.ls",shell,s1,t1,lineNo,lineNo1);
-    
-    
+    new DisplayC("Acia.c",shell,shell,t);
+    new DisplayAssembly("acia.ls",shell,shell,t1,lineNo,lineNo1);
     
     t.addListener (SWT.Selection, e -> {
             String string = "";
@@ -90,7 +100,6 @@ public static void main (String [] args) throws Exception {
             for (int i=0; i<selection.length; i++) 
                 string += selection [i];
             String lineC = string.substring(11,string.length()-1);
-            
             
     });
     
@@ -105,8 +114,8 @@ public static void main (String [] args) throws Exception {
     });
     
     t1.setSelection(0);
-    s.open();
-    s1.open();
+    shell.open();
+    //s1.open();
     while (!shell.isDisposed ()) {
             if (!display.readAndDispatch ()) display.sleep ();
     }
